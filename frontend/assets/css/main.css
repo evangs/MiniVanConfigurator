@@ -20,33 +20,7 @@ html {
     /*-webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
 }*/
 
-.site-container {
-  display: table;
-  width: 100%;
-}
-
-.site-container--header {
-  display: table-row;
-}
-
-.site-container--main {
-  display: table;
-  height: 100%;
-  width: 100%;
-}
-
-.site-container--left,
 .site-container--right {
-  display: table-cell;
-  vertical-align: top;
-}
-
-.site-container--left {
-  width: 80%;
-}
-
-.site-container--right {
-  width: 100%;
   padding: 0 20px;
 }
 
