@@ -1,0 +1,96 @@
+r1 = [100,100,100,100,100,100,100,100,100,100,100,100,100];
+r1_standard = [200];
+r1_hhkb = [100,100];
+
+r2 = [150,100,100,100,100,100,100,100,100,100,100,100,100];
+r2_ansi = [150];
+r2_iso = [1501];
+
+r3_standard = [175];
+r3_stepped = [1751];
+r3 = [100,100,100,100,100,100,100,100,100,100,100];
+r3_ansi = [225];
+r3_iso = [100];
+
+r4_ansi = [225];
+r4_iso = [125, 100];
+r4 = [100,100,100,100,100,100,100,100,100];
+r4_ansi2 = [100,275];
+r4_splitshift = [100,175,100];
+r4_bigq = [175,100,100];
+
+r5 = [125,125,125];
+r5_275 = [275,125,225];
+r5_225 = [225,125,275];
+r5_625 = [625];
+r5_standard = [125,125,125,125];
+r5_singles = [100,100,100,100,100];
+
+
+backspace (standard, hhkb)
+enter (iso, ansi)
+caps (normal, stepped)
+left_shift (ansi, iso)
+right_shift (ansi, split, bigq)
+spacebar (split275, split225, standard)
+bottom_right (standard, singles)
+
+if (backspace == standard) {
+  lr1 = r1.concat(r1_standard);
+} else {
+  lr1 = r1.concat(r1_hhkb);
+}
+
+if (enter == ansi) {
+  lr2 = r2.concat(r2_ansi);
+} else {
+  lr2 = r2.concat(r2_iso);
+}
+
+lr3 = [];
+if (caps == normal) {
+  lr3.concat(r3_standard);
+} else {
+  lr3.concat(r3_stepped);
+}
+
+lr3.concat(r3);
+
+if (enter == ansi) {
+  lr3.concat(r3_ansi);
+} else {
+  lr3.concat(r3_iso);
+}
+
+lr4 = [];
+if (left_shift == ansi) {
+  lr4.concat(r4_ansi);
+} else {
+  lr4.concat(r4_iso);
+}
+
+lr4.concat(r4);
+
+if (right_shift == ansi) {
+  lr4.concat(r4_ansi2);
+} else if (right_shift == splitshift) {
+  lr4.concat(r4_splitshift);
+} else {
+  lr4.concat(r4_bigq);
+}
+
+lr5 = r5;
+
+if (space == standard) {
+  lr5.concat(r5_625);
+} else if (space == split275) {
+  lr5.concat(r5_275);
+} else {
+  lr5.concat(r5_225);
+}
+
+if (bottom_right == standard) {
+  lr5.concat(r5_standard);
+} else {
+  lr5.concat(r5_singles);
+}
