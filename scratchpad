@@ -26,71 +26,269 @@ r5_625 = [625];
 r5_standard = [125,125,125,125];
 r5_singles = [100,100,100,100,100];
 
+tr1 = ['ECS','1','2','3','4','5','6','7','8','9','0','-','='];
+tr1_standard = ['BACKSPACE'];
+tr1_hhkb = ['PRINT','PAUSE'];
 
-backspace (standard, hhkb)
-enter (iso, ansi)
-caps (normal, stepped)
-left_shift (ansi, iso)
-right_shift (ansi, split, bigq)
-spacebar (split275, split225, standard)
-bottom_right (standard, singles)
+tr2 = ['TAB','Q','W','E','R','T','Y','U','I','O','P','[',']'];
+tr2_ansi = ['\\'];
+tr2_iso = ['ENTER ISO'];
 
-if (backspace == standard) {
-  lr1 = r1.concat(r1_standard);
-} else {
-  lr1 = r1.concat(r1_hhkb);
+tr3_standard = ['CAPS'];
+tr3_stepped = ['CAPS STEPPED'];
+tr3 = ['A','S','D','F','G','H','J','K','L',';','\''];
+tr3_ansi = ['ENTER'];
+tr3_iso = ['#'];
+
+tr4_ansi = ['SHIFT'];
+tr4_iso = ['SHIFT ISO', '\\'];
+tr4 = ['Z','X','C','V','B','N','M',',','.'];
+tr4_ansi2 = ['/','SHIFT'];
+tr4_splitshift = ['/','SHIFT','FN'];
+tr4_bigq = ['SHIFT','UP','FN'];
+
+tr5 = ['CTRL','SYS','ALT'];
+tr5_275 = ['ENTER','FN','SPACE'];
+tr5_225 = ['ENTER','FN','SPACE'];
+tr5_625 = ['SPACE'];
+tr5_standard = ['ALT','SYS','MENU','CTRL'];
+tr5_singles = ['ALT','CTRL','LEFT','DOWN','RIGHT'];
+
+
+
+function buildLayout() {
+  var backspace = document.getElementById("backspace").value;
+  var enter = document.getElementById("enter").value;
+  var caps = document.getElementById("caps").value;
+  var left_shift = document.getElementById("left_shift").value;
+  var right_shift = document.getElementById("right_shift").value;
+  var spacebar = document.getElementById("spacebar").value;
+  var bottom_right = document.getElementById("bottom_right").value;
+
+  var lr1 = [];
+  var lr2 = [];
+  var lr3 = [];
+  var lr4 = [];
+  var lr5 = [];
+
+  var layout = [];
+
+  if (backspace == "standard") {
+    lr1 = r1.concat(r1_standard);
+  } else {
+    lr1 = r1.concat(r1_hhkb);
+  }
+
+  if (enter == "ansi") {
+    lr2 = r2.concat(r2_ansi);
+  } else {
+    lr2 = r2.concat(r2_iso);
+  }
+
+  if (caps == "normal") {
+    lr3 = lr3.concat(r3_standard);
+  } else {
+    lr3 = lr3.concat(r3_stepped);
+  }
+
+  lr3 = lr3.concat(r3);
+
+  if (enter == "ansi") {
+    lr3 = lr3.concat(r3_ansi);
+  } else {
+    lr3 = lr3.concat(r3_iso);
+  }
+
+  if (left_shift == "ansi") {
+    lr4 = lr4.concat(r4_ansi);
+  } else {
+    lr4 = lr4.concat(r4_iso);
+  }
+
+  lr4 = lr4.concat(r4);
+
+  if (right_shift == "ansi") {
+    lr4 = lr4.concat(r4_ansi2);
+  } else if (right_shift == "split") {
+    lr4 = lr4.concat(r4_splitshift);
+  } else {
+    lr4 = lr4.concat(r4_bigq);
+  }
+
+  lr5 = r5;
+
+  if (spacebar == "standard") {
+    lr5 = lr5.concat(r5_625);
+  } else if (spacebar == "split275") {
+    lr5 = lr5.concat(r5_275);
+  } else {
+    lr5 = lr5.concat(r5_225);
+  }
+
+  if (bottom_right == "standard") {
+    lr5 = lr5.concat(r5_standard);
+  } else {
+    lr5 = lr5.concat(r5_singles);
+  }
+
+  layout.push(lr1);
+  layout.push(lr2);
+  layout.push(lr3);
+  layout.push(lr4);
+  layout.push(lr5);
+
+  return layout;
 }
 
-if (enter == ansi) {
-  lr2 = r2.concat(r2_ansi);
-} else {
-  lr2 = r2.concat(r2_iso);
+function buildTemplate() {
+  var backspace = document.getElementById("backspace").value;
+  var enter = document.getElementById("enter").value;
+  var caps = document.getElementById("caps").value;
+  var left_shift = document.getElementById("left_shift").value;
+  var right_shift = document.getElementById("right_shift").value;
+  var spacebar = document.getElementById("spacebar").value;
+  var bottom_right = document.getElementById("bottom_right").value;
+
+  var lr1 = [];
+  var lr2 = [];
+  var lr3 = [];
+  var lr4 = [];
+  var lr5 = [];
+
+  var layout = [];
+
+  if (backspace == "standard") {
+    lr1 = tr1.concat(tr1_standard);
+  } else {
+    lr1 = tr1.concat(tr1_hhkb);
+  }
+
+  if (enter == "ansi") {
+    lr2 = tr2.concat(tr2_ansi);
+  } else {
+    lr2 = tr2.concat(tr2_iso);
+  }
+
+  if (caps == "normal") {
+    lr3 = lr3.concat(tr3_standard);
+  } else {
+    lr3 = lr3.concat(tr3_stepped);
+  }
+
+  lr3 = lr3.concat(tr3);
+
+  if (enter == "ansi") {
+    lr3 = lr3.concat(tr3_ansi);
+  } else {
+    lr3 = lr3.concat(tr3_iso);
+  }
+
+  if (left_shift == "ansi") {
+    lr4 = lr4.concat(tr4_ansi);
+  } else {
+    lr4 = lr4.concat(tr4_iso);
+  }
+
+  lr4 = lr4.concat(tr4);
+
+  if (right_shift == "ansi") {
+    lr4 = lr4.concat(tr4_ansi2);
+  } else if (right_shift == "split") {
+    lr4 = lr4.concat(tr4_splitshift);
+  } else {
+    lr4 = lr4.concat(tr4_bigq);
+  }
+
+  lr5 = tr5;
+
+  if (spacebar == "standard") {
+    lr5 = lr5.concat(tr5_625);
+  } else if (spacebar == "split275") {
+    lr5 = lr5.concat(tr5_275);
+  } else {
+    lr5 = lr5.concat(tr5_225);
+  }
+
+  if (bottom_right == "standard") {
+    lr5 = lr5.concat(tr5_standard);
+  } else {
+    lr5 = lr5.concat(tr5_singles);
+  }
+
+  layout.push(lr1);
+  layout.push(lr2);
+  layout.push(lr3);
+  layout.push(lr4);
+  layout.push(lr5);
+
+  return layout;
 }
 
-lr3 = [];
-if (caps == normal) {
-  lr3.concat(r3_standard);
-} else {
-  lr3.concat(r3_stepped);
+function updateLayoutOutput() {
+  var layout = buildLayout();
+  var template = buildTemplate();
+  var output = "";
+
+  for (l in layout) {
+    output += "<div>"+layout[l]+"</div>";
+  }
+
+  output += "<div>-----</div>";
+
+  for (l in template) {
+    output += "<div>"+template[l]+"</div>";
+  }
+
+  document.getElementById("output").innerHTML = output;
 }
 
-lr3.concat(r3);
 
-if (enter == ansi) {
-  lr3.concat(r3_ansi);
-} else {
-  lr3.concat(r3_iso);
-}
 
-lr4 = [];
-if (left_shift == ansi) {
-  lr4.concat(r4_ansi);
-} else {
-  lr4.concat(r4_iso);
-}
+<html>
+<head></head>
+<body>
+  <form>
+    Backspace
+    <select id="backspace" onchange="updateLayoutOutput()">
+      <option value="standard">Standard</option>
+      <option value="hhkb">HHKB</option>
+    </select>
+    Enter
+    <select id="enter" onchange="updateLayoutOutput()">
+      <option value="ansi">ANSI</option>
+      <option value="iso">ISO</option>
+    </select>
+    Caps Lock
+    <select id="caps" onchange="updateLayoutOutput()">
+      <option value="normal">Normal</option>
+      <option value="stepped">Stepped</option>
+    </select>
+    Left Shift
+    <select id="left_shift" onchange="updateLayoutOutput()">
+      <option value="ansi">ANSI</option>
+      <option value="iso">ISO</option>
+    </select>
+    Right Shift
+    <select id="right_shift" onchange="updateLayoutOutput()">
+      <option value="ansi">ANSI</option>
+      <option value="split">Split</option>
+      <option value="bigq">Big Q</option>
+    </select>
+    Spacebar
+    <select id="spacebar" onchange="updateLayoutOutput()">
+      <option value="standard">Standard</option>
+      <option value="split275">Split 275</option>
+      <option value="split225">Split 225</option>
+    </select>
+    Bottom Right
+    <select id="bottom_right" onchange="updateLayoutOutput()">
+      <option value="standard">Standard</option>
+      <option value="singles">Singles</option>
+    </select>
+  </form>
 
-lr4.concat(r4);
-
-if (right_shift == ansi) {
-  lr4.concat(r4_ansi2);
-} else if (right_shift == splitshift) {
-  lr4.concat(r4_splitshift);
-} else {
-  lr4.concat(r4_bigq);
-}
-
-lr5 = r5;
-
-if (space == standard) {
-  lr5.concat(r5_625);
-} else if (space == split275) {
-  lr5.concat(r5_275);
-} else {
-  lr5.concat(r5_225);
-}
-
-if (bottom_right == standard) {
-  lr5.concat(r5_standard);
-} else {
-  lr5.concat(r5_singles);
-}
+  <div id="output">
+  </div>
+  <script src="file:///Users/f4746ib/Documents/layout_builder.js"></script>
+</body>
+</html>
