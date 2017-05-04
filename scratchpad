@@ -292,3 +292,33 @@ function updateLayoutOutput() {
   <script src="file:///Users/f4746ib/Documents/layout_builder.js"></script>
 </body>
 </html>
+
+
+
+
+/**** ZONE BUILDER ****/
+zones = {
+backspace:{name:'Backspace', choices:[{code:'standard', name:'Standard'}, {code:'hhkb', name:'HHKB'}]},
+enter: {name:'Enter', choices:[{code:'ansi', name:'ANSI'}, {code:'iso', name:'ISO'}]},
+caps: {name:'Caps', choices:[{code:'normal', name:'Normal'}, {code:'stepped', name:'Stepped'}]},
+left_shift: {name:'Left Shift', choices:[{code:'ansi', name:'ANSI'}, {code:'iso', name:'ISO'}]},
+right_shift: {name:'Right Shift', choices:[{code:'ansi', name:'ANSI'}, {code:'split', name:'Split'}, {code:'bigq', name:'Arrow'}]},
+spacebar: {name:'Spacebar', choices:[{code:'standard', name:'Standard'}, {code:'split275', name:'Split 275'}, , {code:'split225', name:'Split 225'}]},
+bottom_right: {name:'Bottom Right', choices:[{code:'standard', name:'Standard'}, {code:'singles', name:'Singles'}]},
+}
+
+zoneSelections = {
+  backspace: 'standard',
+  enter: 'ansi',
+  caps: 'normal',
+  left_shift: 'ansi',
+  right_shift: 'ansi',
+  spacebar: 'standard',
+  bottom_right: 'standard',
+}
+
+selectTemplate = '<label class="context-menu--select--label">{{LABEL}}:<select id="{{ID}}" class="context-menu--select--select" v-model="zoneSelections[{{ID}}]" @change="changeLayoutZone"><option v-for="(index, choice) in zones[{{ID}}].choices" v-bind:value="choice.code">{{ choice.name }}</option></select></label>';
+var html = '';
+for (z in zones) {
+  html += selectTemplate.split('{{LABEL}}').join(zones[z].name).split('{{ID}}').join(z);
+}
