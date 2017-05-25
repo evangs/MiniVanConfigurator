@@ -9,6 +9,7 @@ keyboards.push({'name':'provan', 'layouts':provan_layouts, 'templates':provan_te
 keyboards.push({'name':'minorca', 'layouts':minorca_layouts, 'templates':minorca_templates});
 keyboards.push({'name':'ergodox', 'layouts':ergodox_layouts, 'templates':ergodox_templates});
 keyboards.push({'name':'low_writer_rev1', 'layouts':lowwriter_layouts, 'templates':lowwriter_templates});
+keyboards.push({'name':'bananasplit', 'layouts':bananasplit_layouts, 'templates':bananasplit_templates});
 
 buttonTypes = [
   {

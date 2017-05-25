@@ -268,7 +268,7 @@ bananasplit_layouts = [
         { size: 100, type: 'primary' },
         { size: 100, type: 'primary' },
         { size: 100, type: 'primary' },
-        { size: 1501, type: 'secondary' }
+        { size: 150125, type: 'secondary' }
       ],
       [
         { size: 175, type: 'secondary' },
@@ -283,7 +283,8 @@ bananasplit_layouts = [
         { size: 100, type: 'primary' },
         { size: 100, type: 'primary' },
         { size: 100, type: 'primary' },
-        { size: 100, type: 'primary' }
+        { size: 100, type: 'primary' },
+        { size: 125, type: 'spacer' },
       ],
       [
         { size: 125, type: 'secondary' },

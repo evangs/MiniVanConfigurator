@@ -34,7 +34,7 @@ bananasplit_templates = [
           { value: 'P', type: null, mod: null },
           { value: '[', type: null, mod: null },
           { value: ']', type: null, mod: null },
-          { value: '\', type: null, mod: null }
+          { value: '\\', type: null, mod: null }
         ],
         [
           { value: 'CAPS', type: null, mod: null },
@@ -101,7 +101,7 @@ bananasplit_templates = [
           { value: '0', type: null, mod: null },
           { value: '-', type: null, mod: null },
           { value: '=', type: null, mod: null },
-          { value: '\', type: null, mod: null },
+          { value: '\\', type: null, mod: null },
           { value: 'PRINT', type: null, mod: null }
         ],
         [
@@ -200,7 +200,7 @@ bananasplit_templates = [
           { value: 'P', type: null, mod: null },
           { value: '[', type: null, mod: null },
           { value: ']', type: null, mod: null },
-          { value: '\', type: null, mod: null }
+          { value: '\\', type: null, mod: null }
         ],
         [
           { value: 'CAPS', type: null, mod: null },

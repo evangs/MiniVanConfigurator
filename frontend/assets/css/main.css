@@ -176,6 +176,14 @@ html {
   bottom: 12.5px
 }
 
+.keyboard--key--container__150125 {
+    width: 75px;
+    height: 100px;
+    top: 25px;
+    margin-top: -25px;
+    margin-bottom: -25px;
+}
+
 .keyboard--key--container__175 {
   width: 87.5px;
 }

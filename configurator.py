@@ -23,6 +23,8 @@ from keyboards.caravan import keyboard as caravan
 KEYBOARDS.append(caravan)
 from keyboards.lowwriter import keyboard as lowwriter
 KEYBOARDS.append(lowwriter)
+from keyboards.bananasplit import keyboard as bananasplit
+KEYBOARDS.append(bananasplit)
 
 app = Flask(__name__)
 
