@@ -28,7 +28,7 @@ ISO_LAYOUT += '{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},' # 14
 ISO_LAYOUT += '{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},' # 13
 ISO_LAYOUT += '{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},' # 13
 ISO_LAYOUT += '{}, {}, {}, {}, {}, {}, {}, {}),' # 8
-layouts.append({'layout':ANSI_LAYOUT, 'num_keys':62})
+layouts.append({'layout':ISO_LAYOUT, 'num_keys':62})
 
 keyboard = Keyboard(
         name='bananasplit',
