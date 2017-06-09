@@ -328,18 +328,14 @@ for (z in zones) {
 // layout select should get hidden and only the zone selectors show.
 // changing the zones should update the layout
 
-function onZoneChange() {
-  this.layout = calculateLayout(this.zones);
-}
-
 function setFlags(layout) {
   var zones = {backspace: 0, enter: 0, leftshift: 0, rightshift: 0, space: 0, botright: 0}
   zones.botright = layout & 1;
-  zones.space = (layout & 2) / 2;
-  zones.rightshift = (layout & 12) / 4;
-  zones.leftshift = (layout & 16) / 16;
-  zones.enter = (layout & 32) / 32;
-  zones.backspace = (layout & 64) / 64;
+  zones.space = (layout & 6) / 2;
+  zones.rightshift = (layout & 24) / 8;
+  zones.leftshift = (layout & 32) / 32;
+  zones.enter = (layout & 64) / 64;
+  zones.backspace = (layout & 128) / 128;
 
   return zones;
 }
@@ -347,12 +343,84 @@ function setFlags(layout) {
 function calculateLayout(zones) {
   return 0 | (1 * zones.botright) |
              (2 * zones.space) |
-             (4 * zones.rightshift) |
-             (16 * zones.leftshift) |
-             (32 * zones.enter) |
-             (64 * zones.backspace);
+             (8 * zones.rightshift) |
+             (32 * zones.leftshift) |
+             (64 * zones.enter) |
+             (128 * zones.backspace);
 }
 
 function buildLayout(zones) {
-  
+
+  var lr1 = [];
+  var lr2 = [];
+  var lr3 = [];
+  var lr4 = [];
+  var lr5 = [];
+
+  var layout = [];
+
+  if (zones.backspace === 0) {
+    lr1 = r1.concat(r1_standard);
+  } else {
+    lr1 = r1.concat(r1_hhkb);
+  }
+
+  if (zones.enter === 0) {
+    lr2 = r2.concat(r2_ansi);
+  } else {
+    lr2 = r2.concat(r2_iso);
+  }
+
+  lr3 = lr3.concat(r3_standard);
+  lr3 = lr3.concat(r3);
+
+  if (zones.enter === 0) {
+    lr3 = lr3.concat(r3_ansi);
+  } else {
+    lr3 = lr3.concat(r3_iso);
+  }
+
+  if (zones.leftshift === 0) {
+    lr4 = lr4.concat(r4_ansi);
+  } else {
+    lr4 = lr4.concat(r4_iso);
+  }
+
+  lr4 = lr4.concat(r4);
+
+  if (zones.rightshift === 0) {
+    lr4 = lr4.concat(r4_ansi2);
+  } else if (zones.rightshift === 1) {
+    lr4 = lr4.concat(r4_splitshift);
+  } else {
+    lr4 = lr4.concat(r4_bigq);
+  }
+
+  lr5 = r5;
+
+  if (zones.space === 0) {
+    lr5 = lr5.concat(r5_625);
+  } else if (zones.space === 1) {
+    lr5 = lr5.concat(r5_275);
+  } else {
+    lr5 = lr5.concat(r5_225);
+  }
+
+  if (zones.botright === 0) {
+    lr5 = lr5.concat(r5_standard);
+  } else {
+    lr5 = lr5.concat(r5_singles);
+  }
+
+  layout.push(lr1);
+  layout.push(lr2);
+  layout.push(lr3);
+  layout.push(lr4);
+  layout.push(lr5);
+
+  return layout;
+}
+
+function onZoneChange() {
+  this.layout = calculateLayout(this.zones);
 }
