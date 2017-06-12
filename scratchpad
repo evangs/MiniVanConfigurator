@@ -618,30 +618,30 @@ template += '{},{},{},{},{},{},{},{},{},{},{},{},{},{},'
 template += '{},{},{},{},{},{},{},{},{},{},{},{},{},{},'
 template += '{},{},{},{},{},{},{},{},{},{},{},{},{},{},'
 template += '{},{},{},{},{},{},{},{},{},{},{}'
-def getLayout(activeLayout) {
-  bs = activeLayout & 128
-  lshift = activeLayout & 32
-  rshift = 1 if (activeLayout & 24) > 0 else 0
-  space = 1 if (activeLayout & 6) > 0 else 0
-  singles = activeLayout & 1
 
-  return template.format(
-    '{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}',
-    '{'+unicode(14+bs)+'}', '{'+unicode(15+bs)+'}', '{'+unicode(16+bs)+'}', '{'+unicode(17+bs)+'}', '{'+unicode(18+bs)+'}',
-    '{'+unicode(19+bs)+'}','{'+unicode(20+bs)+'}','{'+unicode(21+bs)+'}','{'+unicode(22+bs)+'}','{'+unicode(23+bs)+'}',
-    '{'+unicode(24+bs)+'}','{'+unicode(25+bs)+'}','{'+unicode(26+bs)+'}','{'+unicode(27+bs)+'}','{'+unicode(28+bs)+'}',
-    '{'+unicode(29+bs)+'}','{'+unicode(30+bs)+'}','{'+unicode(31+bs)+'}','{'+unicode(32+bs)+'}','{'+unicode(33+bs)+'}',
-    '{'+unicode(34+bs)+'}','{'+unicode(35+bs)+'}','{'+unicode(36+bs)+'}','{'+unicode(37+bs)+'}','{'+unicode(38+bs)+'}',
-    '{'+unicode(39+bs)+'}','{'+unicode(40+bs)+'}','{'+unicode(14)+'}', '{'+unicode(41+bs)+'}', '{'+unicode(42+bs)+'}',
-    '{'+unicode(42+bs+lshift)+'}', '{'+unicode(43+bs+lshift)+'}', '{'+unicode(44+bs+lshift)+'}', '{'+unicode(45+bs+lshift)+'}',
-    '{'+unicode(46+bs+lshift)+'}', '{'+unicode(47+bs+lshift)+'}', '{'+unicode(48+bs+lshift)+'}', '{'+unicode(49+bs+lshift)+'}',
-    '{'+unicode(50+bs+lshift)+'}', '{'+unicode(51+bs+lshift)+'}', '{'+unicode(52+bs+lshift)+'}', '{'+unicode(53+bs+lshift)+'}',
-    '{'+unicode(53+bs+lshift+rshift)+'}', '{'+unicode(54+bs+lshift+rshift)+'}', '{'+unicode(55+bs+lshift+rshift)+'}',
-    '{'+unicode(56+bs+lshift+rshift)+'}', '{'+unicode(56+bs+lshift+rshift+space)+'}', '{'+unicode(57+bs+lshift+rshift+space)+'}',
-    '{'+unicode(57+bs+lshift+rshift+space+space)+'}', '{'+unicode(58+bs+lshift+rshift+space+space)+'}',
-    '{'+unicode(59+bs+lshift+rshift+space+space)+'}', '{'+unicode(59+bs+lshift+rshift+space+space+singles)+'}',
-    '{'+unicode(60+bs+lshift+rshift+space+space+singles)+'}')
-}
+def getLayout(activeLayout, template):
+    bs = activeLayout & 128
+    lshift = activeLayout & 32
+    rshift = 1 if (activeLayout & 24) > 0 else 0
+    space = 1 if (activeLayout & 6) > 0 else 0
+    singles = activeLayout & 1
+
+    return template.format(
+        '{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}',
+        '{'+unicode(14+bs)+'}', '{'+unicode(15+bs)+'}', '{'+unicode(16+bs)+'}', '{'+unicode(17+bs)+'}', '{'+unicode(18+bs)+'}',
+        '{'+unicode(19+bs)+'}','{'+unicode(20+bs)+'}','{'+unicode(21+bs)+'}','{'+unicode(22+bs)+'}','{'+unicode(23+bs)+'}',
+        '{'+unicode(24+bs)+'}','{'+unicode(25+bs)+'}','{'+unicode(26+bs)+'}','{'+unicode(27+bs)+'}','{'+unicode(28+bs)+'}',
+        '{'+unicode(29+bs)+'}','{'+unicode(30+bs)+'}','{'+unicode(31+bs)+'}','{'+unicode(32+bs)+'}','{'+unicode(33+bs)+'}',
+        '{'+unicode(34+bs)+'}','{'+unicode(35+bs)+'}','{'+unicode(36+bs)+'}','{'+unicode(37+bs)+'}','{'+unicode(38+bs)+'}',
+        '{'+unicode(39+bs)+'}','{'+unicode(40+bs)+'}','{'+unicode(14)+'}', '{'+unicode(41+bs)+'}', '{'+unicode(42+bs)+'}',
+        '{'+unicode(42+bs+lshift)+'}', '{'+unicode(43+bs+lshift)+'}', '{'+unicode(44+bs+lshift)+'}', '{'+unicode(45+bs+lshift)+'}',
+        '{'+unicode(46+bs+lshift)+'}', '{'+unicode(47+bs+lshift)+'}', '{'+unicode(48+bs+lshift)+'}', '{'+unicode(49+bs+lshift)+'}',
+        '{'+unicode(50+bs+lshift)+'}', '{'+unicode(51+bs+lshift)+'}', '{'+unicode(52+bs+lshift)+'}', '{'+unicode(53+bs+lshift)+'}',
+        '{'+unicode(53+bs+lshift+rshift)+'}', '{'+unicode(54+bs+lshift+rshift)+'}', '{'+unicode(55+bs+lshift+rshift)+'}',
+        '{'+unicode(56+bs+lshift+rshift)+'}', '{'+unicode(56+bs+lshift+rshift+space)+'}', '{'+unicode(57+bs+lshift+rshift+space)+'}',
+        '{'+unicode(57+bs+lshift+rshift+space+space)+'}', '{'+unicode(58+bs+lshift+rshift+space+space)+'}',
+        '{'+unicode(59+bs+lshift+rshift+space+space)+'}', '{'+unicode(59+bs+lshift+rshift+space+space+singles)+'}',
+        '{'+unicode(60+bs+lshift+rshift+space+space+singles)+'}')
 
 // need to add a flag on form stating whether it a zone type config or not
 if zones:
