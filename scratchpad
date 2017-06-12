@@ -424,3 +424,214 @@ function buildLayout(zones) {
 function onZoneChange() {
   this.layout = calculateLayout(this.zones);
 }
+
+==================================================
+
+function onZoneChange() {
+  this.layout = k.namespace.calculateLayout(this.zones);
+}
+
+
+function setInitialKeyboard() {
+    var active_keyboard = localStorage.getItem('current-keyboard');
+    if (active_keyboard) {
+        for (var k in keyboards) {
+            if (keyboards[k].name == active_keyboard) {
+                return k;
+            }
+        }
+    }
+
+    return 0;
+}
+
+function setInitialKeymap() {
+    var initial_keyboard = setInitialKeyboard();
+    var k = keyboards[initial_keyboard];
+    var keyboard_storage_name = 'user-keymap-' + k.name;
+    var sKeymap = localStorage.getItem(keyboard_storage_name);
+    if (sKeymap) {
+        return JSON.parse(sKeymap)['keymap'];
+    }
+
+    return k.templates[0]['keys'];
+}
+
+function setInitialLayout() {
+    var initial_keyboard = setInitialKeyboard();
+    var k = keyboards[initial_keyboard];
+    var keyboard_storage_name = 'user-keymap-' + k.name;
+    var sKeymap = localStorage.getItem(keyboard_storage_name);
+
+    if (sKeymap) {
+        var keymap = JSON.parse(sKeymap);
+        if (keymap.hasOwnProperty('activeLayout')) {
+            if (k.namespace.zones) {
+              k.namespace.setFlags(keymap.activeLayout, this.zones);
+              return k.namespace.buildLayout(this.zones);
+            }
+        } else {
+            if (keymap['arrow']) {
+                return k.layouts[1]['keys'];
+            } else {
+                return k.layouts[0]['keys'];
+            }
+        }
+    }
+}
+
+function setInitialActiveLayout() {
+    var initial_keyboard = setInitialKeyboard();
+    var k = keyboards[initial_keyboard];
+    var keyboard_storage_name = 'user-keymap-' + k.name;
+    var sKeymap = localStorage.getItem(keyboard_storage_name);
+    if (sKeymap) {
+        var keymap = JSON.parse(sKeymap);
+        if (keymap.hasOwnProperty('activeLayout')) {
+            return JSON.parse(sKeymap)['activeLayout'];
+        }
+    }
+
+    return 0;
+}
+
+saveLayout: function() {
+        this.fixLayers();
+        var sKeymap = this.buildKeymapJson();
+        this.keymapRaw = sKeymap;
+        var k = this.keyboards[this.activeKeyboard];
+        var keyboard_storage_name = 'user-keymap-' + k.name;
+        localStorage.setItem(keyboard_storage_name, sKeymap);
+        localStorage.setItem('current-keyboard', k.name);
+        this.fnActionCount = this.countFnActions();
+    },
+
+    readKeymapJson: function() {
+            var keyboard = JSON.parse(document.getElementById("rawmap").value);
+
+            // need to handle legacy maps
+            if (Array.isArray(keyboard)) {
+                this.template = keyboard;
+            } else {
+                if (keyboard.hasOwnProperty('keyboard')) {
+                    for (var k in this.keyboards) {
+                        if (this.keyboards[k].name == keyboard['keyboard']) {
+                            this.activeKeyboard = k;
+                            if (this.keyboards[k].namespace.zones) {
+                              this.zones = this.keyboards[k].zones;
+                            } else {
+                              this.supportedLayouts = this.keyboards[k].layouts;
+                            }
+                            break;
+                        }
+                    }
+                } else {
+                    this.activeKeyboard = 0;
+                }
+                if (keyboard.hasOwnProperty('activeLayout')) {
+                    this.activeLayout = keyboard['activeLayout'];
+                    if (this.keyboards[this.activeKeyboard].namespace.zones) {
+                      this.keyboards[this.activeKeyboard].namespace.setFlags(this.activeLayout, this.zones);
+                      this.layout = this.keyboards[this.activeKeyboard].namespace.buildLayout(this.zones);
+                    } else {
+                      this.layout = this.keyboards[this.activeKeyboard].layouts[this.activeLayout]['keys'];
+                    }
+
+                } else {
+                    if (keyboard['arrow']) {
+                        this.layout = this.keyboards[this.activeKeyboard].layouts[1]['keys'];
+                        this.activeLayout = 1;
+                    } else {
+                        this.layout = this.keyboards[this.activeKeyboard].layouts[0]['keys'];
+                        this.activeLayout = 0;
+                    }
+                }
+                this.template = keyboard['keymap'];
+            }
+            this.saveLayout();
+        },
+
+        resetToDefault: function() {
+                this.template = this.keyboards[this.activeKeyboard].templates[this.activeLayout]['keys'];
+                this.saveLayout();
+            },
+
+            changeKeyboard: function(event) {
+                    event.preventDefault();
+
+                    // load saved config other set Default
+                    var k = this.keyboards[this.activeKeyboard];
+                    var keyboard_storage_name = 'user-keymap-' + k.name;
+                    var sKeymap = localStorage.getItem(keyboard_storage_name);
+                    if (sKeymap) {
+                        var keymap = JSON.parse(sKeymap);
+                        this.template = keymap['keymap'];
+                        this.activeLayout = keymap['activeLayout'];
+                        if (k.namespace.zones) {
+                          k.namespace.setFlags(this.activeLayout, this.zones);
+                          this.layout = k.namespace.buildLayout(this.zones);
+                        } else {
+                          this.layout = k.layouts[keymap.activeLayout]['keys'];
+                        }
+                    } else {
+                        if (k.namespace.zones) {
+                          this.template = k.namespace.buildTemplate(this.zones);
+                          this.layout = k.namespace.buildLayout(this.zones);
+                          this.activeLayout = k.namespace.calculateLayout(this.zones);
+                        } else {
+                          this.template = k.templates[0]['keys'];
+                          this.layout = k.layouts[0]['keys'];
+                          this.activeLayout = 0;
+                        }
+                    }
+                    if (!k.namespace.zones) {
+                      this.supportedLayouts = k.layouts;
+                    }
+                    this.saveLayout();
+                },
+
+
+// stepped caps
+                .keyboard--key--container.keyboard--key--container__175125 .keyboard--key {
+    box-shadow: inset 6px 0 1px 0px rgba(0,0,0,0.2), inset -25px 0px 1px 6px rgba(0,0,0,0.2);
+    padding-right: 31px;
+}
+
+// iso enter
+.keyboard--key--container__150125 {
+    width: 75px;
+    height: 100px;
+    top: 0;
+    margin-top: -25px;
+    margin-bottom: -75px;
+}
+
+.keyboard--key--container.keyboard--key--container__150125 .keyboard--key {
+    box-shadow: inset 12.5px 0px 1px 6px rgba(0,0,0,0.1), inset -49px -50px 1px 6px rgba(0,0,0,0.1), inset 0 0 1px 6px rgba(0,0,0,0.2);
+    padding-bottom: 50px;
+}
+
+# python
+# use layout to determine flag values
+template =  '{},{},{},{},{},{},{},{},{},{},{},{},{},{},'
+template += '{},{},{},{},{},{},{},{},{},{},{},{},{},{},'
+template += '{},{},{},{},{},{},{},{},{},{},{},{},{},{},'
+template += '{},{},{},{},{},{},{},{},{},{},{},{},{},{},'
+template += '{},{},{},{},{},{},{},{},{},{},{}'
+
+template.format(
+  '{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}',
+  '{'+unicode(14+bs)+'}', '{'+unicode(15+bs)+'}', '{'+unicode(16+bs)+'}', '{'+unicode(17+bs)+'}', '{'+unicode(18+bs)+'}',
+  '{'+unicode(19+bs)+'}','{'+unicode(20+bs)+'}','{'+unicode(21+bs)+'}','{'+unicode(22+bs)+'}','{'+unicode(23+bs)+'}',
+  '{'+unicode(24+bs)+'}','{'+unicode(25+bs)+'}','{'+unicode(26+bs)+'}','{'+unicode(27+bs)+'}','{'+unicode(28+bs)+'}',
+  '{'+unicode(29+bs)+'}','{'+unicode(30+bs)+'}','{'+unicode(31+bs)+'}','{'+unicode(32+bs)+'}','{'+unicode(33+bs)+'}',
+  '{'+unicode(34+bs)+'}','{'+unicode(35+bs)+'}','{'+unicode(36+bs)+'}','{'+unicode(37+bs)+'}','{'+unicode(38+bs)+'}',
+  '{'+unicode(39+bs)+'}','{'+unicode(40+bs)+'}','{'+unicode(14)+'}', '{'+unicode(41+bs)+'}', '{'+unicode(42+bs)+'}',
+  '{'+unicode(42+bs+lshift)+'}', '{'+unicode(43+bs+lshift)+'}', '{'+unicode(44+bs+lshift)+'}', '{'+unicode(45+bs+lshift)+'}',
+  '{'+unicode(46+bs+lshift)+'}', '{'+unicode(47+bs+lshift)+'}', '{'+unicode(48+bs+lshift)+'}', '{'+unicode(49+bs+lshift)+'}',
+  '{'+unicode(50+bs+lshift)+'}', '{'+unicode(51+bs+lshift)+'}', '{'+unicode(52+bs+lshift)+'}', '{'+unicode(53+bs+lshift)+'}',
+  '{'+unicode(53+bs+lshift+rshift)+'}', '{'+unicode(54+bs+lshift+rshift)+'}', '{'+unicode(55+bs+lshift+rshift)+'}',
+  '{'+unicode(56+bs+lshift+rshift)+'}', '{'+unicode(56+bs+lshift+rshift+space)+'}', '{'+unicode(57+bs+lshift+rshift+space)+'}',
+  '{'+unicode(57+bs+lshift+rshift+space+space)+'}', '{'+unicode(58+bs+lshift+rshift+space+space)+'}',
+  '{'+unicode(59+bs+lshift+rshift+space+space)+'}', '{'+unicode(59+bs+lshift+rshift+space+space+singles)+'}',
+  '{'+unicode(60+bs+lshift+rshift+space+space+singles)+'}')
