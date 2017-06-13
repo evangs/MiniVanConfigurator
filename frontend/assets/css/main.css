@@ -179,13 +179,27 @@ html {
 .keyboard--key--container__150125 {
     width: 75px;
     height: 100px;
-    top: 25px;
+    top: 0;
     margin-top: -25px;
-    margin-bottom: -25px;
+    margin-bottom: -75px;
+}
+
+.keyboard--key--container.keyboard--key--container__150125 .keyboard--key {
+    box-shadow: inset 12.5px 0px 1px 6px rgba(0,0,0,0.1), inset -49px -50px 1px 6px rgba(0,0,0,0.1), inset 0 0 1px 6px rgba(0,0,0,0.2);
+    padding-bottom: 50px;
 }
 
 .keyboard--key--container__175 {
   width: 87.5px;
+}
+
+.keyboard--key--container__175125 {
+  width: 87.5px;
+}
+
+.keyboard--key--container.keyboard--key--container__175125 .keyboard--key {
+    box-shadow: inset 6px 0 1px 0px rgba(0,0,0,0.2), inset -25px 0px 1px 6px rgba(0,0,0,0.2);
+    padding-right: 31px;
 }
 
 .keyboard--key--container__200 {

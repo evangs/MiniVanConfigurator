@@ -1,15 +1,15 @@
 keyboards = [];
-keyboards.push({'name':'minivan_rev1', 'layouts':minivan_layouts, 'templates':minivan_templates});
-keyboards.push({'name':'minivan_rev3', 'layouts':minivan_layouts, 'templates':minivan_templates});
-keyboards.push({'name':'caravan', 'layouts':minivan_layouts, 'templates':minivan_templates});
-keyboards.push({'name':'roadkit', 'layouts':roadkit_layouts, 'templates':roadkit_templates});
-keyboards.push({'name':'transitvan', 'layouts':transitvan_layouts, 'templates':transitvan_templates});
-keyboards.push({'name':'cargovan', 'layouts':cargovan_layouts, 'templates':cargovan_templates});
-keyboards.push({'name':'provan', 'layouts':provan_layouts, 'templates':provan_templates});
-keyboards.push({'name':'minorca', 'layouts':minorca_layouts, 'templates':minorca_templates});
-keyboards.push({'name':'ergodox', 'layouts':ergodox_layouts, 'templates':ergodox_templates});
-keyboards.push({'name':'low_writer_rev1', 'layouts':lowwriter_layouts, 'templates':lowwriter_templates});
-keyboards.push({'name':'bananasplit', 'layouts':bananasplit_layouts, 'templates':bananasplit_templates});
+keyboards.push({'name':'minivan_rev1', 'namespace':minivan});
+keyboards.push({'name':'minivan_rev3', 'namespace':minivan});
+keyboards.push({'name':'caravan', 'namespace':minivan});
+keyboards.push({'name':'roadkit', 'namespace':roadkit});
+keyboards.push({'name':'transitvan', 'namespace':transitvan});
+keyboards.push({'name':'cargovan', 'namespace':cargovan});
+keyboards.push({'name':'provan', 'namespace':provan});
+keyboards.push({'name':'minorca', 'namespace':minorca});
+keyboards.push({'name':'ergodox', 'namespace':ergodox});
+keyboards.push({'name':'low_writer_rev1', 'namespace':lowwriter});
+keyboards.push({'name':'bananasplit', 'namespace': bananasplit});
 
 buttonTypes = [
   {
@@ -97,7 +97,11 @@ function setInitialKeymap() {
         return JSON.parse(sKeymap)['keymap'];
     }
 
-    return k.templates[0]['keys'];
+    if (k.namespace.zones) {
+        return k.namespace.buildTemplate(k.namespace.zones);
+    }
+
+    return k.namespace.templates[0]['keys'];
 }
 
 function setInitialLayout() {
@@ -109,12 +113,15 @@ function setInitialLayout() {
     if (sKeymap) {
         var keymap = JSON.parse(sKeymap);
         if (keymap.hasOwnProperty('activeLayout')) {
-            return k.layouts[keymap.activeLayout]['keys'];
+            if (k.namespace.zones) {
+                return k.namespace.buildLayout(k.namespace.setFlags(keymap.activeLayout, k.namespace.zones));
+            }
+            return k.namespace.layouts[keymap.activeLayout]['keys'];
         } else {
             if (keymap['arrow']) {
-                return k.layouts[1]['keys'];
+                return k.namespace.layouts[1]['keys'];
             } else {
-                return k.layouts[0]['keys'];
+                return k.namespace.layouts[0]['keys'];
             }
         }
     }
@@ -128,11 +135,42 @@ function setInitialActiveLayout() {
     if (sKeymap) {
         var keymap = JSON.parse(sKeymap);
         if (keymap.hasOwnProperty('activeLayout')) {
-            return JSON.parse(sKeymap)['activeLayout'];
+            return keymap['activeLayout'];
         }
     }
 
     return 0;
+}
+
+function setInitialHasZones() {
+    var initial_keyboard = setInitialKeyboard();
+    var k = keyboards[initial_keyboard];
+
+    if (k.namespace.zones) {
+        return true;
+    }
+
+    return false;
+}
+
+function setInitialZones() {
+    var initial_keyboard = setInitialKeyboard();
+    var k = keyboards[initial_keyboard];
+    var keyboard_storage_name = 'user-keymap-' + k.name;
+    var sKeymap = localStorage.getItem(keyboard_storage_name);
+
+    if (!k.namespace.zones) {
+        return [];
+    }
+
+    if (sKeymap) {
+        var keymap = JSON.parse(sKeymap);
+        if (keymap.hasOwnProperty('activeLayout')) {
+            return k.namespace.setFlags(keymap.activeLayout, k.namespace.zones);
+        } else {
+            return k.namespace.zones;
+        }
+    }
 }
 
 
@@ -157,12 +195,14 @@ var v = new Vue({
     },
     fnActionCount: 0,
     fnActionLimit: 32,
-    supportedLayouts: keyboards[setInitialKeyboard()].layouts,
+    supportedLayouts: keyboards[setInitialKeyboard()].namespace.layouts,
     activeLayout: setInitialActiveLayout(),
     layerLimit: 16, // Maximum number of layers
     keymapRaw: '',
     keyboards: keyboards,
-    activeKeyboard: setInitialKeyboard()
+    activeKeyboard: setInitialKeyboard(),
+    zones: setInitialZones(),
+    hasZones: setInitialHasZones()
   },
   created: function () {
     this.saveLayout();
@@ -285,7 +325,11 @@ var v = new Vue({
                 for (var k in this.keyboards) {
                     if (this.keyboards[k].name == keyboard['keyboard']) {
                         this.activeKeyboard = k;
-                        this.supportedLayouts = this.keyboards[k].layouts;
+                        if (k.namespace.zones) {
+                            this.supportedLayouts = null;
+                        } else {
+                            this.supportedLayouts = this.keyboards[k].namespace.layouts;
+                        }
                         break;
                     }
                 }
@@ -293,14 +337,19 @@ var v = new Vue({
                 this.activeKeyboard = 0;
             }
             if (keyboard.hasOwnProperty('activeLayout')) {
-                this.layout = this.keyboards[this.activeKeyboard].layouts[keyboard['activeLayout']]['keys'];
-                this.activeLayout = keyboard['activeLayout'];
+                if (this.keyboards[this.activeKeyboard].namespace.zones) {
+                    this.activeLayout = keyboard['activeLayout'];
+                    this.layout = this.keyboards[this.activeKeyboard].namespace.buildLayout(this.keyboards[this.activeKeyboard].namespace.setFlags(this.activeLayout, this.keyboards[this.activeKeyboard].namespace.zones));
+                } else {
+                    this.layout = this.keyboards[this.activeKeyboard].namespace.layouts[keyboard['activeLayout']]['keys'];
+                    this.activeLayout = keyboard['activeLayout'];
+                }
             } else {
                 if (keyboard['arrow']) {
-                    this.layout = this.keyboards[this.activeKeyboard].layouts[1]['keys'];
+                    this.layout = this.keyboards[this.activeKeyboard].namespace.layouts[1]['keys'];
                     this.activeLayout = 1;
                 } else {
-                    this.layout = this.keyboards[this.activeKeyboard].layouts[0]['keys'];
+                    this.layout = this.keyboards[this.activeKeyboard].namepsace.layouts[0]['keys'];
                     this.activeLayout = 0;
                 }
             }
@@ -310,7 +359,11 @@ var v = new Vue({
     },
 
     resetToDefault: function() {
-        this.template = this.keyboards[this.activeKeyboard].templates[this.activeLayout]['keys'];
+        if (this.keyboards[this.activeKeyboard].namespace.zones) {
+            this.template = this.keyboards[this.activeKeyboard].namespace.buildTemplate(this.zones);
+        } else {
+            this.template = this.keyboards[this.activeKeyboard].namespace.templates[this.activeLayout]['keys'];
+        }
         this.saveLayout();
     },
 
@@ -422,8 +475,8 @@ var v = new Vue({
     changeLayout: function(event) {
         event.preventDefault();
 
-        this.layout = this.keyboards[this.activeKeyboard].layouts[this.activeLayout]['keys'];
-        this.template = this.keyboards[this.activeKeyboard].templates[this.activeLayout]['keys'];
+        this.layout = this.keyboards[this.activeKeyboard].namespace.layouts[this.activeLayout]['keys'];
+        this.template = this.keyboards[this.activeKeyboard].namespace.templates[this.activeLayout]['keys'];
         this.saveLayout();
     },
 
@@ -440,14 +493,29 @@ var v = new Vue({
         if (sKeymap) {
             var keymap = JSON.parse(sKeymap);
             this.template = keymap['keymap'];
-            this.layout = k.layouts[keymap.activeLayout]['keys'];
             this.activeLayout = keymap['activeLayout'];
+            if (k.namespace.zones) {
+                this.layout = k.namespace.buildLayout(k.namespace.setFlags(this.activeLayout, k.namespace.zones));
+            } else {
+                this.layout = k.namespace.layouts[keymap.activeLayout]['keys'];
+            }
         } else {
-            this.template = k.templates[0]['keys'];
-            this.layout = k.layouts[0]['keys'];
             this.activeLayout = 0;
+            if (k.namespace.zones) {
+                this.template = k.namespace.buildTemplate(k.namespace.setFlags(this.activeLayout, k.namespace.zones));
+                this.layout = k.namespace.buildLayout(k.namespace.setFlags(this.activeLayout, k.namespace.zones));
+            } else {
+                this.template = k.namespace.templates[0]['keys'];
+                this.layout = k.namespace.layouts[0]['keys'];
+            }
         }
-        this.supportedLayouts = k.layouts;
+        if (k.namespace.zones) {
+            this.zones = k.namespace.zones;
+            this.hasZones = true;
+        } else {
+            this.hasZones = false;
+            this.supportedLayouts = k.namespace.layouts;
+        }
         this.saveLayout();
     },
 
@@ -526,6 +594,13 @@ var v = new Vue({
       };
 
       return layers;
+    },
+
+    onZoneChange: function() {
+        var k = this.keyboards[this.activeKeyboard];
+        this.layout = k.namespace.buildLayout(this.zones);
+        this.template = k.namespace.buildTemplate(this.zones);
+        this.activeLayout = k.namespace.calculateLayout(this.zones);
     }
   }
 });

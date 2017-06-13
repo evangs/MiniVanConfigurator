@@ -34,7 +34,7 @@
                   </select>
                 </label>
               </div>
-              <div class="context-menu--select">
+              <div v-if="!hasZones" class="context-menu--select">
                 <label class="context-menu--select--label">
                   Layout:
                   <select class="context-menu--select--select" v-model="activeLayout" @change="changeLayout">
@@ -42,6 +42,7 @@
                   </select>
                 </label>
               </div>
+              <zone-selector-component v-if="hasZones" v-on:zone="onZoneChange" :zones="zones"></zone-selector-component>
             <h2 v-model="fnActionCount">Remaining FN Actions: {{ fnActionLimit - fnActionCount }}</h2>
           </div>
 
@@ -55,6 +56,11 @@
                 name="keyboard"
                 type="hidden"
                 v-bind:value="keyboards[activeKeyboard]['name']"
+              >
+              <input
+                name="hasZones"
+                type="hidden"
+                v-model="hasZones"
               >
             <div v-for="(keyboardIndex, keyboard) in template" class="keyboard-container">
               <div class="keyboard--layer">
@@ -325,24 +331,16 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.26/vue.min.js"></script>
-    <script src="assets/js/keyboards/minivan/layouts.js"></script>
-    <script src="assets/js/keyboards/minivan/templates.js"></script>
-    <script src="assets/js/keyboards/roadkit/layouts.js"></script>
-    <script src="assets/js/keyboards/roadkit/templates.js"></script>
-    <script src="assets/js/keyboards/transitvan/layouts.js"></script>
-    <script src="assets/js/keyboards/transitvan/templates.js"></script>
-    <script src="assets/js/keyboards/cargovan/layouts.js"></script>
-    <script src="assets/js/keyboards/cargovan/templates.js"></script>
-    <script src="assets/js/keyboards/provan/layouts.js"></script>
-    <script src="assets/js/keyboards/provan/templates.js"></script>
-    <script src="assets/js/keyboards/minorca/layouts.js"></script>
-    <script src="assets/js/keyboards/minorca/templates.js"></script>
-    <script src="assets/js/keyboards/ergodox/layouts.js"></script>
-    <script src="assets/js/keyboards/ergodox/templates.js"></script>
-    <script src="assets/js/keyboards/lowwriter/layouts.js"></script>
-    <script src="assets/js/keyboards/lowwriter/templates.js"></script>
-    <script src="assets/js/keyboards/bananasplit/layouts.js"></script>
-    <script src="assets/js/keyboards/bananasplit/templates.js"></script>
+    <script src="assets/js/keyboards/minivan/keyboard.js"></script>
+    <script src="assets/js/keyboards/roadkit/keyboard.js"></script>
+    <script src="assets/js/keyboards/transitvan/keyboard.js"></script>
+    <script src="assets/js/keyboards/cargovan/keyboard.js"></script>
+    <script src="assets/js/keyboards/provan/keyboard.js"></script>
+    <script src="assets/js/keyboards/minorca/keyboard.js"></script>
+    <script src="assets/js/keyboards/ergodox/keyboard.js"></script>
+    <script src="assets/js/keyboards/lowwriter/keyboard.js"></script>
+    <script src="assets/js/keyboards/bananasplit/keyboard2.js"></script>
+    <script src="assets/js/zoneSelectorComponent.js"></script>
     <script src="assets/js/main.js"></script>
   </body>
 </html>
