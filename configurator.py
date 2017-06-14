@@ -58,6 +58,7 @@ def main():
             return('error: no keyboard specified')
 
         activeLayout = int(request.form.get('activeLayout', '0'))
+        hasZones = request.form.get('hasZones', 'false') == 'true'
         layer1 = request.form.getlist('L1')
         layer1types = request.form.getlist('LT1')
         layer1mods = request.form.getlist('LM1')
@@ -150,8 +151,12 @@ def main():
         if layer15:
             layers.append({'values': layer15, 'types': layer15types, 'mods': layer15mods})
 
-        keys_per_layer = keyboard.layouts[activeLayout]['num_keys']
-        template = keyboard.layouts[activeLayout]['layout']
+        if hasZones:
+            keys_per_layer = keyboard.get_num_keys(activeLayout)
+            template = keyboard.get_layout(activeLayout)
+        else:
+            keys_per_layer = keyboard.layouts[activeLayout]['num_keys']
+            template = keyboard.layouts[activeLayout]['layout']
 
         for layer in layers:
             if (len(layer['values']) != keys_per_layer):

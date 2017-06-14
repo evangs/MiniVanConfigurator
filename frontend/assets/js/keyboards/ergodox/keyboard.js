@@ -1,4 +1,125 @@
-ergodox_templates = [
+var ergodox = ergodox || {};
+
+ergodox.layouts = [
+  {
+    name: 'standard',
+    keys: [
+      [
+        { size: 150, type: 'secondary' },
+        { size: 100, type: 'primary' },
+        { size: 100, type: 'primary' },
+        { size: 100, type: 'primary' },
+        { size: 100, type: 'primary' },
+        { size: 100, type: 'primary' },
+        { size: 100, type: 'secondary' },
+        { size: 100, type: 'spacer' },
+        { size: 1500, type: 'spacer' },
+        { size: 100, type: 'secondary' },
+        { size: 100, type: 'primary' },
+        { size: 100, type: 'primary' },
+        { size: 100, type: 'primary' },
+        { size: 100, type: 'primary' },
+        { size: 100, type: 'primary' },
+        { size: 150, type: 'secondary' }
+      ],
+      [
+          { size: 150, type: 'secondary' },
+          { size: 100, type: 'primary' },
+          { size: 100, type: 'primary' },
+          { size: 100, type: 'primary' },
+          { size: 100, type: 'primary' },
+          { size: 100, type: 'primary' },
+          { size: 151, type: 'secondary' },
+          { size: 100, type: 'spacer' },
+          { size: 1500, type: 'spacer' },
+          { size: 151, type: 'secondary' },
+          { size: 100, type: 'primary' },
+          { size: 100, type: 'primary' },
+          { size: 100, type: 'primary' },
+          { size: 100, type: 'primary' },
+          { size: 100, type: 'primary' },
+          { size: 150, type: 'secondary' }
+      ],
+      [
+          { size: 150, type: 'secondary' },
+          { size: 100, type: 'primary' },
+          { size: 100, type: 'primary' },
+          { size: 100, type: 'primary' },
+          { size: 100, type: 'primary' },
+          { size: 100, type: 'primary' },
+          { size: 100, type: 'spacer' },
+          { size: 100, type: 'spacer' },
+          { size: 1500, type: 'spacer' },
+          { size: 100, type: 'spacer' },
+          { size: 100, type: 'primary' },
+          { size: 100, type: 'primary' },
+          { size: 100, type: 'primary' },
+          { size: 100, type: 'primary' },
+          { size: 100, type: 'primary' },
+          { size: 150, type: 'secondary' }
+      ],
+      [
+          { size: 150, type: 'secondary' },
+          { size: 100, type: 'primary' },
+          { size: 100, type: 'primary' },
+          { size: 100, type: 'primary' },
+          { size: 100, type: 'primary' },
+          { size: 100, type: 'primary' },
+          { size: 152, type: 'secondary' },
+          { size: 100, type: 'spacer' },
+          { size: 1500, type: 'spacer' },
+          { size: 152, type: 'secondary' },
+          { size: 100, type: 'primary' },
+          { size: 100, type: 'primary' },
+          { size: 100, type: 'primary' },
+          { size: 100, type: 'primary' },
+          { size: 100, type: 'primary' },
+          { size: 150, type: 'secondary' }
+      ],
+      [
+          { size: 100, type: 'secondary' },
+          { size: 100, type: 'secondary' },
+          { size: 100, type: 'secondary' },
+          { size: 100, type: 'secondary' },
+          { size: 100, type: 'secondary' },
+          { size: 100, type: 'spacer' },
+          { size: 100, type: 'spacer' },
+          { size: 100, type: 'spacer' },
+          { size: 1500, type: 'spacer' },
+          { size: 100, type: 'spacer' },
+          { size: 100, type: 'spacer' },
+          { size: 100, type: 'secondary' },
+          { size: 100, type: 'secondary' },
+          { size: 100, type: 'secondary' },
+          { size: 100, type: 'secondary' },
+          { size: 100, type: 'secondary' },
+      ],
+      [
+          { size: 100, type: 'secondary' },
+          { size: 100, type: 'secondary' },
+          { size: 100, type: 'spacer' },
+          { size: 100, type: 'secondary' },
+          { size: 100, type: 'secondary' },
+      ],
+      [
+          { size: 100, type: 'secondary' },
+          { size: 100, type: 'spacer' },
+          { size: 100, type: 'secondary' }
+      ],
+      [
+          { size: 202, type: 'secondary' },
+          { size: 202, type: 'secondary' },
+          { size: 100, type: 'secondary' },
+          { size: 100, type: 'spacer' },
+          { size: 100, type: 'secondary' },
+          { size: 202, type: 'secondary' },
+          { size: 202, type: 'secondary' }
+      ]
+    ]
+  }
+];
+
+ergodox.templates = [
   {
     name: 'standard',
     layout: 'standard',
@@ -119,3 +240,4 @@ ergodox_templates = [
     ]
   }
 ];
+

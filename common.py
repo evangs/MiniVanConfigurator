@@ -217,3 +217,5 @@ class Keyboard(object):
         self.description = kwargs.get('description', '')
         self.layouts = kwargs.get('layouts')
         self.firmware_folder = kwargs.get('firmware_folder')
+        self.get_num_keys = kwargs.get('get_num_keys', None)
+        self.get_layout = kwargs.get('get_layout', None)
