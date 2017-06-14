@@ -348,3 +348,8 @@ dl dd {
   padding-left: 80px;
   padding-bottom: 10px;
 }
+
+.zonebox div {
+    display: inline-block;
+    padding: 5px;
+}
