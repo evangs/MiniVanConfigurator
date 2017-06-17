@@ -325,9 +325,11 @@ var v = new Vue({
                 for (var k in this.keyboards) {
                     if (this.keyboards[k].name == keyboard['keyboard']) {
                         this.activeKeyboard = k;
-                        if (k.namespace.zones) {
+                        if (this.keyboards[k].namespace.zones) {
                             this.supportedLayouts = null;
+                            this.hasZones = true;
                         } else {
+                            this.hasZones = false;
                             this.supportedLayouts = this.keyboards[k].namespace.layouts;
                         }
                         break;
