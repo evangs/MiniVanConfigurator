@@ -13,7 +13,7 @@ ALLOWED_CHARACTERS = {'A', 'B', 'A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'
                       'FN27', 'FN28', 'FN29', 'FN30', 'FN31', 'TRNS', 'MSTP', 'MPLY', 'MPRV', 'MNXT', 'VOLU', 'VOLD', 'MUTE',
                       'PSCR', 'SLCK', 'MINUS', 'EQUAL', 'LBRACKET', 'RBRACKET', 'BSLASH', 'SCOLON', 'NONUS_HASH', 'NONUS_BSLASH',
                       'QUOTE', 'GRV', 'COMMA', 'DOT', 'SLASH', 'DELETE', 'NLCK', 'RALT', 'LGUI', 'RGUI', 'FN0', 'FN1',
-                      'FN2', 'ESC', 'FN3', 'FN4', 'FN5', 'FN6', 'FN7', 'FN8', 'FN9', 'FN10', '\'', 'APP'}
+                      'FN2', 'ESC', 'FN3', 'FN4', 'FN5', 'FN6', 'FN7', 'FN8', 'FN9', 'FN10', '\'', 'APP', 'NO'}
 
 TRANSLATE_CHARACTERS = ['PRINT', 'SCROLL', '-', '_', '=', '+', '[', '{', ']', '}', '\\', '|',
                         '#', '~', ';', ':', '\'', '"', '`', ',', '<', '.', '>', '/', '?', 'DEL', 'NUM',
