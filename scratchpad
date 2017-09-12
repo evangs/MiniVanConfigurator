@@ -650,3 +650,45 @@ if zones:
 else:
   keys_per_layer = keyboard.layouts[activeLayout]['num_keys']
   template = keyboard.layouts[activeLayout]['layout']
+
+
+
+===9-12-2017===
+template += '#define BACKLIGHT_LEVELS  {}\n'.format(config.get('backlightLevels'))
+template += '#define BACKLIGHT_PIN {}\n'.format(config.get('backlightPin'))
+
+template += '#define DEBOUNCING_DELAY  {}\n'.format(config.get('debouncingDelay'))
+template += '#define TAPPING_TERM      {}\n'.format(config.get('tappingTerm'))
+
+if config.get('lockingSupportEnable'):
+  template += '#define LOCKING_SUPPORT_ENABLE\n'
+if config.get('lockingResyncEnable'):
+  template += '#define LOCKING_RESYNC_ENABLE\n'
+
+template += '#define IS_COMMAND() ( \\n'
+template += '    keyboard_report->mods == (MOD_BIT(KC_LSHIFT) | MOD_BIT(KC_RSHIFT)) \\n'
+template += ')\n'
+
+if config.get('noDebug'):
+  template += '#define NO_DEBUG\n'
+
+if config.get('noPrint'):
+  template += '#define NO_PRINT\n'
+
+if config.get('noActionLayer'):
+  template += '#define NO_ACTION_LAYER\n'
+
+if config.get('noActionTapping'):
+  template += '#define NO_ACTION_TAPPING\n'
+
+if config.get('noActionOneshot'):
+  template += '#define NO_ACTION_ONESHOT'
+
+if config.get('noActionMacro'):
+  template += '#define NO_ACTION_MACRO\n'
+
+if config.get('noActionFunction'):
+  template += '#define NO_ACTION_FUNCTION\n'
+
+template += '#endif'
+
