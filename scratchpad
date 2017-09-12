@@ -692,3 +692,37 @@ if config.get('noActionFunction'):
 
 template += '#endif'
 
+
+
+def buildRules(rules):
+  template =  'MCU = {}\n'.format(rules.get('mcu'))
+  template += 'F_CPU = {}\n'.format(rules.get('processorFrequency'))
+  template += 'ARCH = {}\n'.format(rules.get('architecture'))
+  template += 'F_USB = {}\n'.format(rules.get('inputClockFrequency'))
+
+  template += 'OPT_DEFS += -DINTERRUPT_CONTROL_ENDPOINT\n'
+  template += 'OPT_DEFS += -DBOOTLOADER_SIZE={}\n'.format(rules.get('bootloaderSize'))
+
+  if rules.get('bootmagicEnabled'):
+    template += 'BOOTMAGIC_ENABLE = yes\n'
+
+  if rules.get('mousekeyEnabled'):
+    template += 'MOUSEKEY_ENABLE = yes\n'
+
+  if rules.get('extrakeyEnabled'):
+    template += 'EXTRAKEY_ENABLE = yes\n'
+
+  if rules.get('consoleEnabled'):
+    template += 'CONSOLE_ENABLE = yes\n'
+
+  if rules.get('commandEnabled'):
+    template += 'COMMAND_ENABLE = yes\n'
+
+  if rules.get('sleepLedEnabled'):
+    template += 'SLEEP_LED_ENABLE = yes\n'
+
+  if rules.get('nkroEnabled'):
+    template += 'NKRO_ENABLE = yes\n'
+
+  if rules.get('backlightEnabled'):
+    template += 'BACKLIGHT_ENABLE = yes\n'
