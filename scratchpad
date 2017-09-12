@@ -726,3 +726,23 @@ def buildRules(rules):
 
   if rules.get('backlightEnabled'):
     template += 'BACKLIGHT_ENABLE = yes\n'
+
+
+
+def buildKeyboardHeader(keymap):
+  tmp = []
+  for row in keymap.get('keys'):
+    tmp.append(row.join(', '))
+
+  kmap = tmp.join(', ')
+
+  template =  '#ifndef KEYBOARD_H\n'
+  template += '#define KEYBOARD_H\n'
+  template += '#include "quantum.h"\n'
+
+  template += '#define KEYMAP({}) { \'.format(kmap)
+
+  for row in keymap.get('placements'):
+    template += '{ {} }, \'.format(row.join(', '))
+
+  template += '}\n#endif'
