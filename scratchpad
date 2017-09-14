@@ -1,655 +1,73 @@
-r1 = [100,100,100,100,100,100,100,100,100,100,100,100,100];
-r1_standard = [200];
-r1_hhkb = [100,100];
+===9-14-2017===
+if key_type == 'modkey' or key_type == 'combokey':
+    return '{}({})'.format(key_secondary, key_value)
 
-r2 = [150,100,100,100,100,100,100,100,100,100,100,100,100];
-r2_ansi = [150];
-r2_iso = [1501];
+if key_type == 'tapkey':
+    if key_secondary[1:].isdigit():
+        return 'LT({}, {})'.format(key_secondary[1:], key_value)
+    return '{}_T({})'.format(key_secondary, key_value)
 
-r3_standard = [175];
-r3_stepped = [1751];
-r3 = [100,100,100,100,100,100,100,100,100,100,100];
-r3_ansi = [225];
-r3_iso = [100];
-
-r4_ansi = [225];
-r4_iso = [125, 100];
-r4 = [100,100,100,100,100,100,100,100,100];
-r4_ansi2 = [100,275];
-r4_splitshift = [100,175,100];
-r4_bigq = [175,100,100];
-
-r5 = [125,125,125];
-r5_275 = [275,125,225];
-r5_225 = [225,125,275];
-r5_625 = [625];
-r5_standard = [125,125,125,125];
-r5_singles = [100,100,100,100,100];
-
-tr1 = ['ECS','1','2','3','4','5','6','7','8','9','0','-','='];
-tr1_standard = ['BACKSPACE'];
-tr1_hhkb = ['PRINT','PAUSE'];
-
-tr2 = ['TAB','Q','W','E','R','T','Y','U','I','O','P','[',']'];
-tr2_ansi = ['\\'];
-tr2_iso = ['ENTER ISO'];
-
-tr3_standard = ['CAPS'];
-tr3_stepped = ['CAPS STEPPED'];
-tr3 = ['A','S','D','F','G','H','J','K','L',';','\''];
-tr3_ansi = ['ENTER'];
-tr3_iso = ['#'];
-
-tr4_ansi = ['SHIFT'];
-tr4_iso = ['SHIFT ISO', '\\'];
-tr4 = ['Z','X','C','V','B','N','M',',','.'];
-tr4_ansi2 = ['/','SHIFT'];
-tr4_splitshift = ['/','SHIFT','FN'];
-tr4_bigq = ['SHIFT','UP','FN'];
-
-tr5 = ['CTRL','SYS','ALT'];
-tr5_275 = ['ENTER','FN','SPACE'];
-tr5_225 = ['ENTER','FN','SPACE'];
-tr5_625 = ['SPACE'];
-tr5_standard = ['ALT','SYS','MENU','CTRL'];
-tr5_singles = ['ALT','CTRL','LEFT','DOWN','RIGHT'];
-
-
-
-function buildLayout() {
-  var backspace = document.getElementById("backspace").value;
-  var enter = document.getElementById("enter").value;
-  var caps = document.getElementById("caps").value;
-  var left_shift = document.getElementById("left_shift").value;
-  var right_shift = document.getElementById("right_shift").value;
-  var spacebar = document.getElementById("spacebar").value;
-  var bottom_right = document.getElementById("bottom_right").value;
-
-  var lr1 = [];
-  var lr2 = [];
-  var lr3 = [];
-  var lr4 = [];
-  var lr5 = [];
-
-  var layout = [];
-
-  if (backspace == "standard") {
-    lr1 = r1.concat(r1_standard);
-  } else {
-    lr1 = r1.concat(r1_hhkb);
-  }
-
-  if (enter == "ansi") {
-    lr2 = r2.concat(r2_ansi);
-  } else {
-    lr2 = r2.concat(r2_iso);
-  }
-
-  if (caps == "normal") {
-    lr3 = lr3.concat(r3_standard);
-  } else {
-    lr3 = lr3.concat(r3_stepped);
-  }
-
-  lr3 = lr3.concat(r3);
-
-  if (enter == "ansi") {
-    lr3 = lr3.concat(r3_ansi);
-  } else {
-    lr3 = lr3.concat(r3_iso);
-  }
-
-  if (left_shift == "ansi") {
-    lr4 = lr4.concat(r4_ansi);
-  } else {
-    lr4 = lr4.concat(r4_iso);
-  }
-
-  lr4 = lr4.concat(r4);
-
-  if (right_shift == "ansi") {
-    lr4 = lr4.concat(r4_ansi2);
-  } else if (right_shift == "split") {
-    lr4 = lr4.concat(r4_splitshift);
-  } else {
-    lr4 = lr4.concat(r4_bigq);
-  }
-
-  lr5 = r5;
-
-  if (spacebar == "standard") {
-    lr5 = lr5.concat(r5_625);
-  } else if (spacebar == "split275") {
-    lr5 = lr5.concat(r5_275);
-  } else {
-    lr5 = lr5.concat(r5_225);
-  }
-
-  if (bottom_right == "standard") {
-    lr5 = lr5.concat(r5_standard);
-  } else {
-    lr5 = lr5.concat(r5_singles);
-  }
-
-  layout.push(lr1);
-  layout.push(lr2);
-  layout.push(lr3);
-  layout.push(lr4);
-  layout.push(lr5);
-
-  return layout;
+LAYER_TYPE_MAP = {
+    'momentary': 'MO',
+    'toggle': 'TG',
+    'direct': 'TO',
+    'taptoggle': 'TT',
+    'setdefaultlayer': 'DF'
 }
 
-function buildTemplate() {
-  var backspace = document.getElementById("backspace").value;
-  var enter = document.getElementById("enter").value;
-  var caps = document.getElementById("caps").value;
-  var left_shift = document.getElementById("left_shift").value;
-  var right_shift = document.getElementById("right_shift").value;
-  var spacebar = document.getElementById("spacebar").value;
-  var bottom_right = document.getElementById("bottom_right").value;
-
-  var lr1 = [];
-  var lr2 = [];
-  var lr3 = [];
-  var lr4 = [];
-  var lr5 = [];
-
-  var layout = [];
-
-  if (backspace == "standard") {
-    lr1 = tr1.concat(tr1_standard);
-  } else {
-    lr1 = tr1.concat(tr1_hhkb);
-  }
-
-  if (enter == "ansi") {
-    lr2 = tr2.concat(tr2_ansi);
-  } else {
-    lr2 = tr2.concat(tr2_iso);
-  }
-
-  if (caps == "normal") {
-    lr3 = lr3.concat(tr3_standard);
-  } else {
-    lr3 = lr3.concat(tr3_stepped);
-  }
-
-  lr3 = lr3.concat(tr3);
-
-  if (enter == "ansi") {
-    lr3 = lr3.concat(tr3_ansi);
-  } else {
-    lr3 = lr3.concat(tr3_iso);
-  }
-
-  if (left_shift == "ansi") {
-    lr4 = lr4.concat(tr4_ansi);
-  } else {
-    lr4 = lr4.concat(tr4_iso);
-  }
-
-  lr4 = lr4.concat(tr4);
-
-  if (right_shift == "ansi") {
-    lr4 = lr4.concat(tr4_ansi2);
-  } else if (right_shift == "split") {
-    lr4 = lr4.concat(tr4_splitshift);
-  } else {
-    lr4 = lr4.concat(tr4_bigq);
-  }
-
-  lr5 = tr5;
-
-  if (spacebar == "standard") {
-    lr5 = lr5.concat(tr5_625);
-  } else if (spacebar == "split275") {
-    lr5 = lr5.concat(tr5_275);
-  } else {
-    lr5 = lr5.concat(tr5_225);
-  }
-
-  if (bottom_right == "standard") {
-    lr5 = lr5.concat(tr5_standard);
-  } else {
-    lr5 = lr5.concat(tr5_singles);
-  }
-
-  layout.push(lr1);
-  layout.push(lr2);
-  layout.push(lr3);
-  layout.push(lr4);
-  layout.push(lr5);
-
-  return layout;
-}
-
-function updateLayoutOutput() {
-  var layout = buildLayout();
-  var template = buildTemplate();
-  var output = "";
-
-  for (l in layout) {
-    output += "<div>"+layout[l]+"</div>";
-  }
-
-  output += "<div>-----</div>";
-
-  for (l in template) {
-    output += "<div>"+template[l]+"</div>";
-  }
-
-  document.getElementById("output").innerHTML = output;
-}
-
-
-
-<html>
-<head></head>
-<body>
-  <form>
-    Backspace
-    <select id="backspace" onchange="updateLayoutOutput()">
-      <option value="standard">Standard</option>
-      <option value="hhkb">HHKB</option>
-    </select>
-    Enter
-    <select id="enter" onchange="updateLayoutOutput()">
-      <option value="ansi">ANSI</option>
-      <option value="iso">ISO</option>
-    </select>
-    Caps Lock
-    <select id="caps" onchange="updateLayoutOutput()">
-      <option value="normal">Normal</option>
-      <option value="stepped">Stepped</option>
-    </select>
-    Left Shift
-    <select id="left_shift" onchange="updateLayoutOutput()">
-      <option value="ansi">ANSI</option>
-      <option value="iso">ISO</option>
-    </select>
-    Right Shift
-    <select id="right_shift" onchange="updateLayoutOutput()">
-      <option value="ansi">ANSI</option>
-      <option value="split">Split</option>
-      <option value="bigq">Big Q</option>
-    </select>
-    Spacebar
-    <select id="spacebar" onchange="updateLayoutOutput()">
-      <option value="standard">Standard</option>
-      <option value="split275">Split 275</option>
-      <option value="split225">Split 225</option>
-    </select>
-    Bottom Right
-    <select id="bottom_right" onchange="updateLayoutOutput()">
-      <option value="standard">Standard</option>
-      <option value="singles">Singles</option>
-    </select>
-  </form>
-
-  <div id="output">
-  </div>
-  <script src="file:///Users/f4746ib/Documents/layout_builder.js"></script>
-</body>
-</html>
-
-
-
-
-/**** ZONE BUILDER ****/
-zones = {
-backspace:{name:'Backspace', choices:[{code:'standard', name:'Standard'}, {code:'hhkb', name:'HHKB'}]},
-enter: {name:'Enter', choices:[{code:'ansi', name:'ANSI'}, {code:'iso', name:'ISO'}]},
-caps: {name:'Caps', choices:[{code:'normal', name:'Normal'}, {code:'stepped', name:'Stepped'}]},
-left_shift: {name:'Left Shift', choices:[{code:'ansi', name:'ANSI'}, {code:'iso', name:'ISO'}]},
-right_shift: {name:'Right Shift', choices:[{code:'ansi', name:'ANSI'}, {code:'split', name:'Split'}, {code:'bigq', name:'Arrow'}]},
-spacebar: {name:'Spacebar', choices:[{code:'standard', name:'Standard'}, {code:'split275', name:'Split 275'}, , {code:'split225', name:'Split 225'}]},
-bottom_right: {name:'Bottom Right', choices:[{code:'standard', name:'Standard'}, {code:'singles', name:'Singles'}]},
-}
-
-zoneSelections = {
-  backspace: 'standard',
-  enter: 'ansi',
-  caps: 'normal',
-  left_shift: 'ansi',
-  right_shift: 'ansi',
-  spacebar: 'standard',
-  bottom_right: 'standard',
-}
-
-selectTemplate = '<label class="context-menu--select--label">{{LABEL}}:<select id="{{ID}}" class="context-menu--select--select" v-model="zoneSelections[{{ID}}]" @change="changeLayoutZone"><option v-for="(index, choice) in zones[{{ID}}].choices" v-bind:value="choice.code">{{ choice.name }}</option></select></label>';
-var html = '';
-for (z in zones) {
-  html += selectTemplate.split('{{LABEL}}').join(zones[z].name).split('{{ID}}').join(z);
-}
-
-
-// new approach is to generate a layout for each config and save off the layout to be rebuilt upon load.
-// layout select should get hidden and only the zone selectors show.
-// changing the zones should update the layout
-
-function setFlags(layout) {
-  var zones = {backspace: 0, enter: 0, leftshift: 0, rightshift: 0, space: 0, botright: 0}
-  zones.botright = layout & 1;
-  zones.space = (layout & 6) / 2;
-  zones.rightshift = (layout & 24) / 8;
-  zones.leftshift = (layout & 32) / 32;
-  zones.enter = (layout & 64) / 64;
-  zones.backspace = (layout & 128) / 128;
-
-  return zones;
-}
-
-function calculateLayout(zones) {
-  return 0 | (1 * zones.botright) |
-             (2 * zones.space) |
-             (8 * zones.rightshift) |
-             (32 * zones.leftshift) |
-             (64 * zones.enter) |
-             (128 * zones.backspace);
-}
-
-function buildLayout(zones) {
-
-  var lr1 = [];
-  var lr2 = [];
-  var lr3 = [];
-  var lr4 = [];
-  var lr5 = [];
-
-  var layout = [];
-
-  if (zones.backspace === 0) {
-    lr1 = r1.concat(r1_standard);
-  } else {
-    lr1 = r1.concat(r1_hhkb);
-  }
-
-  if (zones.enter === 0) {
-    lr2 = r2.concat(r2_ansi);
-  } else {
-    lr2 = r2.concat(r2_iso);
-  }
-
-  lr3 = lr3.concat(r3_standard);
-  lr3 = lr3.concat(r3);
-
-  if (zones.enter === 0) {
-    lr3 = lr3.concat(r3_ansi);
-  } else {
-    lr3 = lr3.concat(r3_iso);
-  }
-
-  if (zones.leftshift === 0) {
-    lr4 = lr4.concat(r4_ansi);
-  } else {
-    lr4 = lr4.concat(r4_iso);
-  }
-
-  lr4 = lr4.concat(r4);
-
-  if (zones.rightshift === 0) {
-    lr4 = lr4.concat(r4_ansi2);
-  } else if (zones.rightshift === 1) {
-    lr4 = lr4.concat(r4_splitshift);
-  } else {
-    lr4 = lr4.concat(r4_bigq);
-  }
-
-  lr5 = r5;
-
-  if (zones.space === 0) {
-    lr5 = lr5.concat(r5_625);
-  } else if (zones.space === 1) {
-    lr5 = lr5.concat(r5_275);
-  } else {
-    lr5 = lr5.concat(r5_225);
-  }
-
-  if (zones.botright === 0) {
-    lr5 = lr5.concat(r5_standard);
-  } else {
-    lr5 = lr5.concat(r5_singles);
-  }
-
-  layout.push(lr1);
-  layout.push(lr2);
-  layout.push(lr3);
-  layout.push(lr4);
-  layout.push(lr5);
-
-  return layout;
-}
-
-function onZoneChange() {
-  this.layout = calculateLayout(this.zones);
-}
-
-==================================================
-
-function onZoneChange() {
-  this.layout = k.namespace.calculateLayout(this.zones);
-}
-
-
-function setInitialKeyboard() {
-    var active_keyboard = localStorage.getItem('current-keyboard');
-    if (active_keyboard) {
-        for (var k in keyboards) {
-            if (keyboards[k].name == active_keyboard) {
-                return k;
-            }
-        }
-    }
-
-    return 0;
-}
-
-function setInitialKeymap() {
-    var initial_keyboard = setInitialKeyboard();
-    var k = keyboards[initial_keyboard];
-    var keyboard_storage_name = 'user-keymap-' + k.name;
-    var sKeymap = localStorage.getItem(keyboard_storage_name);
-    if (sKeymap) {
-        return JSON.parse(sKeymap)['keymap'];
-    }
-
-    return k.templates[0]['keys'];
-}
-
-function setInitialLayout() {
-    var initial_keyboard = setInitialKeyboard();
-    var k = keyboards[initial_keyboard];
-    var keyboard_storage_name = 'user-keymap-' + k.name;
-    var sKeymap = localStorage.getItem(keyboard_storage_name);
-
-    if (sKeymap) {
-        var keymap = JSON.parse(sKeymap);
-        if (keymap.hasOwnProperty('activeLayout')) {
-            if (k.namespace.zones) {
-              k.namespace.setFlags(keymap.activeLayout, this.zones);
-              return k.namespace.buildLayout(this.zones);
-            }
-        } else {
-            if (keymap['arrow']) {
-                return k.layouts[1]['keys'];
-            } else {
-                return k.layouts[0]['keys'];
-            }
-        }
-    }
-}
-
-function setInitialActiveLayout() {
-    var initial_keyboard = setInitialKeyboard();
-    var k = keyboards[initial_keyboard];
-    var keyboard_storage_name = 'user-keymap-' + k.name;
-    var sKeymap = localStorage.getItem(keyboard_storage_name);
-    if (sKeymap) {
-        var keymap = JSON.parse(sKeymap);
-        if (keymap.hasOwnProperty('activeLayout')) {
-            return JSON.parse(sKeymap)['activeLayout'];
-        }
-    }
-
-    return 0;
-}
-
-saveLayout: function() {
-        this.fixLayers();
-        var sKeymap = this.buildKeymapJson();
-        this.keymapRaw = sKeymap;
-        var k = this.keyboards[this.activeKeyboard];
-        var keyboard_storage_name = 'user-keymap-' + k.name;
-        localStorage.setItem(keyboard_storage_name, sKeymap);
-        localStorage.setItem('current-keyboard', k.name);
-        this.fnActionCount = this.countFnActions();
-    },
-
-    readKeymapJson: function() {
-            var keyboard = JSON.parse(document.getElementById("rawmap").value);
-
-            // need to handle legacy maps
-            if (Array.isArray(keyboard)) {
-                this.template = keyboard;
-            } else {
-                if (keyboard.hasOwnProperty('keyboard')) {
-                    for (var k in this.keyboards) {
-                        if (this.keyboards[k].name == keyboard['keyboard']) {
-                            this.activeKeyboard = k;
-                            if (this.keyboards[k].namespace.zones) {
-                              this.zones = this.keyboards[k].zones;
-                            } else {
-                              this.supportedLayouts = this.keyboards[k].layouts;
-                            }
-                            break;
-                        }
-                    }
-                } else {
-                    this.activeKeyboard = 0;
-                }
-                if (keyboard.hasOwnProperty('activeLayout')) {
-                    this.activeLayout = keyboard['activeLayout'];
-                    if (this.keyboards[this.activeKeyboard].namespace.zones) {
-                      this.keyboards[this.activeKeyboard].namespace.setFlags(this.activeLayout, this.zones);
-                      this.layout = this.keyboards[this.activeKeyboard].namespace.buildLayout(this.zones);
-                    } else {
-                      this.layout = this.keyboards[this.activeKeyboard].layouts[this.activeLayout]['keys'];
-                    }
-
-                } else {
-                    if (keyboard['arrow']) {
-                        this.layout = this.keyboards[this.activeKeyboard].layouts[1]['keys'];
-                        this.activeLayout = 1;
-                    } else {
-                        this.layout = this.keyboards[this.activeKeyboard].layouts[0]['keys'];
-                        this.activeLayout = 0;
-                    }
-                }
-                this.template = keyboard['keymap'];
-            }
-            this.saveLayout();
-        },
-
-        resetToDefault: function() {
-                this.template = this.keyboards[this.activeKeyboard].templates[this.activeLayout]['keys'];
-                this.saveLayout();
-            },
-
-            changeKeyboard: function(event) {
-                    event.preventDefault();
-
-                    // load saved config other set Default
-                    var k = this.keyboards[this.activeKeyboard];
-                    var keyboard_storage_name = 'user-keymap-' + k.name;
-                    var sKeymap = localStorage.getItem(keyboard_storage_name);
-                    if (sKeymap) {
-                        var keymap = JSON.parse(sKeymap);
-                        this.template = keymap['keymap'];
-                        this.activeLayout = keymap['activeLayout'];
-                        if (k.namespace.zones) {
-                          k.namespace.setFlags(this.activeLayout, this.zones);
-                          this.layout = k.namespace.buildLayout(this.zones);
-                        } else {
-                          this.layout = k.layouts[keymap.activeLayout]['keys'];
-                        }
-                    } else {
-                        if (k.namespace.zones) {
-                          this.template = k.namespace.buildTemplate(this.zones);
-                          this.layout = k.namespace.buildLayout(this.zones);
-                          this.activeLayout = k.namespace.calculateLayout(this.zones);
-                        } else {
-                          this.template = k.templates[0]['keys'];
-                          this.layout = k.layouts[0]['keys'];
-                          this.activeLayout = 0;
-                        }
-                    }
-                    if (!k.namespace.zones) {
-                      this.supportedLayouts = k.layouts;
-                    }
-                    this.saveLayout();
-                },
-
-
-// stepped caps
-                .keyboard--key--container.keyboard--key--container__175125 .keyboard--key {
-    box-shadow: inset 6px 0 1px 0px rgba(0,0,0,0.2), inset -25px 0px 1px 6px rgba(0,0,0,0.2);
-    padding-right: 31px;
-}
-
-// iso enter
-.keyboard--key--container__150125 {
-    width: 75px;
-    height: 100px;
-    top: 0;
-    margin-top: -25px;
-    margin-bottom: -75px;
-}
-
-.keyboard--key--container.keyboard--key--container__150125 .keyboard--key {
-    box-shadow: inset 12.5px 0px 1px 6px rgba(0,0,0,0.1), inset -49px -50px 1px 6px rgba(0,0,0,0.1), inset 0 0 1px 6px rgba(0,0,0,0.2);
-    padding-bottom: 50px;
-}
-
-# python
-# use layout to determine flag values
-template =  '{},{},{},{},{},{},{},{},{},{},{},{},{},{},'
-template += '{},{},{},{},{},{},{},{},{},{},{},{},{},{},'
-template += '{},{},{},{},{},{},{},{},{},{},{},{},{},{},'
-template += '{},{},{},{},{},{},{},{},{},{},{},{},{},{},'
-template += '{},{},{},{},{},{},{},{},{},{},{}'
-
-def getLayout(activeLayout, template):
-    bs = activeLayout & 128
-    lshift = activeLayout & 32
-    rshift = 1 if (activeLayout & 24) > 0 else 0
-    space = 1 if (activeLayout & 6) > 0 else 0
-    singles = activeLayout & 1
-
-    return template.format(
-        '{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}',
-        '{'+unicode(14+bs)+'}', '{'+unicode(15+bs)+'}', '{'+unicode(16+bs)+'}', '{'+unicode(17+bs)+'}', '{'+unicode(18+bs)+'}',
-        '{'+unicode(19+bs)+'}','{'+unicode(20+bs)+'}','{'+unicode(21+bs)+'}','{'+unicode(22+bs)+'}','{'+unicode(23+bs)+'}',
-        '{'+unicode(24+bs)+'}','{'+unicode(25+bs)+'}','{'+unicode(26+bs)+'}','{'+unicode(27+bs)+'}','{'+unicode(28+bs)+'}',
-        '{'+unicode(29+bs)+'}','{'+unicode(30+bs)+'}','{'+unicode(31+bs)+'}','{'+unicode(32+bs)+'}','{'+unicode(33+bs)+'}',
-        '{'+unicode(34+bs)+'}','{'+unicode(35+bs)+'}','{'+unicode(36+bs)+'}','{'+unicode(37+bs)+'}','{'+unicode(38+bs)+'}',
-        '{'+unicode(39+bs)+'}','{'+unicode(40+bs)+'}','{'+unicode(14)+'}', '{'+unicode(41+bs)+'}', '{'+unicode(42+bs)+'}',
-        '{'+unicode(42+bs+lshift)+'}', '{'+unicode(43+bs+lshift)+'}', '{'+unicode(44+bs+lshift)+'}', '{'+unicode(45+bs+lshift)+'}',
-        '{'+unicode(46+bs+lshift)+'}', '{'+unicode(47+bs+lshift)+'}', '{'+unicode(48+bs+lshift)+'}', '{'+unicode(49+bs+lshift)+'}',
-        '{'+unicode(50+bs+lshift)+'}', '{'+unicode(51+bs+lshift)+'}', '{'+unicode(52+bs+lshift)+'}', '{'+unicode(53+bs+lshift)+'}',
-        '{'+unicode(53+bs+lshift+rshift)+'}', '{'+unicode(54+bs+lshift+rshift)+'}', '{'+unicode(55+bs+lshift+rshift)+'}',
-        '{'+unicode(56+bs+lshift+rshift)+'}', '{'+unicode(56+bs+lshift+rshift+space)+'}', '{'+unicode(57+bs+lshift+rshift+space)+'}',
-        '{'+unicode(57+bs+lshift+rshift+space+space)+'}', '{'+unicode(58+bs+lshift+rshift+space+space)+'}',
-        '{'+unicode(59+bs+lshift+rshift+space+space)+'}', '{'+unicode(59+bs+lshift+rshift+space+space+singles)+'}',
-        '{'+unicode(60+bs+lshift+rshift+space+space+singles)+'}')
-
-// need to add a flag on form stating whether it a zone type config or not
-if zones:
-  template = keyboard.getLayout(activeLayout);
-  keys_per_layer = keyboard.getKeysPerLayer(activeLayout);
-else:
-  keys_per_layer = keyboard.layouts[activeLayout]['num_keys']
-  template = keyboard.layouts[activeLayout]['layout']
+if LAYER_TYPE_MAP.has_key(key_type):
+    return '{}({})'.format(LAYER_TYPE_MAP[key_type], key_value[1:])
+
+if key_type == 'oneshotmod' || key_type == 'oneshotlayer':
+    if key_value[1:].isdigit():
+        return 'OSL({})'.format(key_value[1:])
+    return 'OSM({})'.format(key_value[1:])
+
+if key_type == 'unicode':
+    return 'UC({})'.format(key_value)
+
+
+
+
+
+combokey
+    HYPR
+    MEH
+    LCAG
+    ALTG
+    SCMD
+    LCA
+
+tapkey
+    C_S
+    MEH
+    LCAG
+    RCAG
+    ALL
+    SCMD
+    LCA
+
+{value: 'TILD', display: '~'},
+{value: 'EXLM', display: '!'},
+{value: 'AT', display: '@'},
+{value: 'HASH', display: '#'},
+{value: 'DLR', display: '$'},
+{value: 'PERC', display: '%'},
+{value: 'CIRC', display: '^'},
+{value: 'AMPR', display: '&'},
+{value: 'ASTR', display: '*'},
+{value: 'LPRN', display: '('},
+{value: 'RPRN', display: ')'},
+{value: 'UNDS', display: '_'},
+{value: 'PLUS', display: '+'},
+{value: 'LCBR', display: '{'},
+{value: 'RCBR', display: '}'},
+{value: 'LT', display: '<'},
+{value: 'GT', display: '>'},
+{value: 'COLN', display: ':'},
+{value: 'DQT', display: '"'},
+{value: 'PIPE', display: '|'},
+{value: 'QUES', display: '?'},
 
 
 
