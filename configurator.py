@@ -1,38 +1,14 @@
 # coding: utf8
 import os, subprocess, datetime, fileinput
-from flask import Flask, flash, request, redirect, url_for, send_from_directory
-import common as kbd
+from flask import Flask, flash, request, redirect, url_for, send_from_directory, jsonify
 
-KEYBOARDS = []
-# import keyboard configurations and add them to app keyboard list
-from keyboards.minivan import keyboard as minivan_rev1
-KEYBOARDS.append(minivan_rev1)
-from keyboards.minivan_rev3 import keyboard as minivan_rev3
-KEYBOARDS.append(minivan_rev3)
-from keyboards.roadkit import keyboard as roadkit
-KEYBOARDS.append(roadkit)
-from keyboards.transitvan import keyboard as transitvan
-KEYBOARDS.append(transitvan)
-from keyboards.provan import keyboard as provan
-KEYBOARDS.append(provan)
-from keyboards.minorca import keyboard as minorca
-KEYBOARDS.append(minorca)
-from keyboards.ergodox import keyboard as ergodox
-KEYBOARDS.append(ergodox)
-from keyboards.caravan import keyboard as caravan
-KEYBOARDS.append(caravan)
-from keyboards.lowwriter import keyboard as lowwriter
-KEYBOARDS.append(lowwriter)
-from keyboards.bananasplit import keyboard as bananasplit
-KEYBOARDS.append(bananasplit)
 
 app = Flask(__name__)
 
 # Returns the file to download at the very end
-@app.route('/downloads/<firmware>/<filename>')
-def download_file(filename, firmware):
-    return send_from_directory("/app/tmk_keyboard/keyboard/{0}".format(firmware),
-                               filename)
+@app.route('/downloads/<filename>')
+def download_file(filename):
+    return send_from_directory("/app/qmk_firmware", filename, as_attachment=True)
 
 
 # This is our main routine. it allows GET and POST requests. If we get a GET request, we just send our template file
@@ -42,153 +18,263 @@ def download_file(filename, firmware):
 @app.route('/', methods=['GET', 'POST'])
 def main():
     if request.method == 'POST':
-        #as soon as we get a POST request we remember the current time so we can crank out tons of configs at and every config has a unique name (1 request per second should be enough
-        #to not run into collisions at this time i hope ;))
-        now = str(datetime.datetime.now()).replace(' ', '-').replace(':', '-').split(".")[0]
+        keyboard = request.get_json()
 
-        #Here we take all POST parameters and stuff them into lists. One layer has one list.
-        keyboard_name = request.form.get('keyboard', '')
-        keyboard = None
-        for k in KEYBOARDS:
-            if k.name == keyboard_name:
-                keyboard = k
-                break
+        firmware_directory = setupFirmware(
+                keyboard.get('config'),
+                keyboard.get('rules'),
+                keyboard.get('configKeymap'),
+                keyboard.get('keymap'))
 
-        if keyboard is None:
-            return('error: no keyboard specified')
+        buildFirmware(firmware_directory)
 
-        activeLayout = int(request.form.get('activeLayout', '0'))
-        hasZones = request.form.get('hasZones', 'false') == 'true'
-        layer1 = request.form.getlist('L1')
-        layer1types = request.form.getlist('LT1')
-        layer1mods = request.form.getlist('LM1')
-        layer2 = request.form.getlist('L2')
-        layer2types = request.form.getlist('LT2')
-        layer2mods = request.form.getlist('LM2')
-        layer3 = request.form.getlist('L3')
-        layer3types = request.form.getlist('LT3')
-        layer3mods = request.form.getlist('LM3')
-        layer4 = request.form.getlist('L4')
-        layer4types = request.form.getlist('LT4')
-        layer4mods = request.form.getlist('LM4')
-        layer5 = request.form.getlist('L5')
-        layer5types = request.form.getlist('LT5')
-        layer5mods = request.form.getlist('LM5')
-        layer6 = request.form.getlist('L6')
-        layer6types = request.form.getlist('LT6')
-        layer6mods = request.form.getlist('LM6')
-        layer7 = request.form.getlist('L7')
-        layer7types = request.form.getlist('LT7')
-        layer7mods = request.form.getlist('LM7')
-        layer8 = request.form.getlist('L8')
-        layer8types = request.form.getlist('LT8')
-        layer8mods = request.form.getlist('LM8')
-        layer9 = request.form.getlist('L9')
-        layer9types = request.form.getlist('LT9')
-        layer9mods = request.form.getlist('LM9')
-        layer10 = request.form.getlist('L10')
-        layer10types = request.form.getlist('LT10')
-        layer10mods = request.form.getlist('LM10')
-        layer11 = request.form.getlist('L11')
-        layer11types = request.form.getlist('LT11')
-        layer11mods = request.form.getlist('LM11')
-        layer12 = request.form.getlist('L12')
-        layer12types = request.form.getlist('LT12')
-        layer12mods = request.form.getlist('LM12')
-        layer13 = request.form.getlist('L13')
-        layer13types = request.form.getlist('LT13')
-        layer13mods = request.form.getlist('LM13')
-        layer14 = request.form.getlist('L14')
-        layer14types = request.form.getlist('LT14')
-        layer14mods = request.form.getlist('LM14')
-        layer15 = request.form.getlist('L15')
-        layer15types = request.form.getlist('LT15')
-        layer15mods = request.form.getlist('LM15')
-
-        layers = []
-        if layer1:
-            layers.append({'values': layer1, 'types': layer1types, 'mods': layer1mods})
-
-        if layer2:
-            layers.append({'values': layer2, 'types': layer2types, 'mods': layer2mods})
-
-        if layer3:
-            layers.append({'values': layer3, 'types': layer3types, 'mods': layer3mods})
-
-        if layer4:
-            layers.append({'values': layer4, 'types': layer4types, 'mods': layer4mods})
-
-        if layer5:
-            layers.append({'values': layer5, 'types': layer5types, 'mods': layer5mods})
-
-        if layer6:
-            layers.append({'values': layer6, 'types': layer6types, 'mods': layer6mods})
-
-        if layer7:
-            layers.append({'values': layer7, 'types': layer7types, 'mods': layer7mods})
-
-        if layer8:
-            layers.append({'values': layer8, 'types': layer8types, 'mods': layer8mods})
-
-        if layer9:
-            layers.append({'values': layer9, 'types': layer9types, 'mods': layer9mods})
-
-        if layer10:
-            layers.append({'values': layer10, 'types': layer10types, 'mods': layer10mods})
-
-        if layer11:
-            layers.append({'values': layer11, 'types': layer11types, 'mods': layer11mods})
-
-        if layer12:
-            layers.append({'values': layer12, 'types': layer12types, 'mods': layer12mods})
-
-        if layer13:
-            layers.append({'values': layer13, 'types': layer13types, 'mods': layer13mods})
-
-        if layer14:
-            layers.append({'values': layer14, 'types': layer14types, 'mods': layer14mods})
-
-        if layer15:
-            layers.append({'values': layer15, 'types': layer15types, 'mods': layer15mods})
-
-        if hasZones:
-            keys_per_layer = keyboard.get_num_keys(activeLayout)
-            template = keyboard.get_layout(activeLayout)
-        else:
-            keys_per_layer = keyboard.layouts[activeLayout]['num_keys']
-            template = keyboard.layouts[activeLayout]['layout']
-
-        for layer in layers:
-            if (len(layer['values']) != keys_per_layer):
-                return('error: some values are missing! please enter all information!')
-
-        layers, fn_actions = kbd.buildFnActions(layers)
-
-        for layer in layers:
-            layer = kbd.makeUpper(layer)
-            layer = kbd.translateList(layer)
-            if not(kbd.isAllowed(layer)):
-                return('error: there are invalid characters. please check your imput!<p>{0}</p>'.format(layer))
-
-        keymaps = kbd.buildKeyMaps(layers, template)
-
-        #We can now insert all the values we got into the template file we use. This point can 'propably' be improved still...
-        configfile = kbd.createTemplate(fn_actions, keymaps)
-
-        #As soon as we have the entire content of our config, we can write it into a file (with the timestamp we made right at the start!)
-        filename = "keymap_{0}_{1}.c".format(keyboard.firmware_folder, now)
-        callname = "{0}_{1}".format(keyboard.firmware_folder, now)
-        with open("/app/tmk_keyboard/keyboard/{0}/{1}".format(keyboard.firmware_folder, filename), "w+") as templatefile:
-            templatefile.write(configfile)
-            templatefile.close()
-
-        #everything is set up, now we just have to make our hex file with a system call
-        callstring = "make KEYMAP="+callname+" TARGETFILE="+callname+" > /dev/null"
-        subprocess.call(callstring, shell=True, cwd="/app/tmk_keyboard/keyboard/{0}/".format(keyboard.firmware_folder))
-
-        #everything is done, we have to return the hex file! :)
-        return redirect(url_for('download_file', filename=callname+'.hex', firmware=keyboard.firmware_folder))
+        #return redirect(url_for('download_file', filename='{}_default.hex'.format(firmware_directory)))
+        return jsonify({'hex_url': '/downloads/{}_default.hex'.format(firmware_directory)})
 
     #this is what happens on a GET request, we just send the index.htm file.
     else:
         return send_from_directory("/app/frontend/", "index.html")
+
+def buildFirmware(firmware_directory):
+    callstring = 'make {}'.format(firmware_directory)
+    subprocess.call(callstring, shell=True, cwd="/app/qmk_firmware/")
+
+def setupFirmware(config, rules, configKeymap, keymap):
+    now = str(datetime.datetime.now()).replace('-', '').replace(' ', '').replace(':', '').split(".")[0]
+
+    firmware_directory = '{}{}'.format(config.get('product').replace(' ', ''), now)
+    os.makedirs('/app/qmk_firmware/keyboards/{}/keymaps/default'.format(firmware_directory), exist_ok=True)
+
+    with open("/app/qmk_firmware/keyboards/{}/{}".format(firmware_directory, 'config.h'), "w+") as configfile:
+        configfile.write(buildConfig(config))
+        configfile.close()
+
+    with open("/app/qmk_firmware/keyboards/{}/{}".format(firmware_directory, 'makefile'), "w+") as makefile:
+        makefile.write('ifndef MAKEFILE_INCLUDED\ninclude ../../Makefile\nendif')
+        makefile.close()
+
+    with open("/app/qmk_firmware/keyboards/{}/{}".format(firmware_directory, 'rules.mk'), "w+") as rulesfile:
+        rulesfile.write(buildRules(rules))
+        rulesfile.close()
+
+    with open("/app/qmk_firmware/keyboards/{}/{}".format(firmware_directory, '{}.c'.format(firmware_directory)), "w+") as keyboardcfile:
+        keyboardcfile.write(buildProductC(firmware_directory))
+        keyboardcfile.close()
+
+    with open("/app/qmk_firmware/keyboards/{}/{}".format(firmware_directory, '{}.h'.format(firmware_directory)), "w+") as keyboardhfile:
+        keyboardhfile.write(buildKeyboardHeader(configKeymap, firmware_directory))
+        keyboardhfile.close()
+
+    with open("/app/qmk_firmware/keyboards/{}/keymaps/default/keymap.c".format(firmware_directory), "w+") as keymapfile:
+        keymapfile.write(buildKeymap(keymap, firmware_directory))
+        keymapfile.close()
+
+    return firmware_directory
+
+def buildProductC(firmware_directory):
+    template =  '#include "{}.h"\n'.format(firmware_directory)
+    template += 'void matrix_init_kb(void) {\n'
+    template += '	matrix_init_user();\n'
+    template += '}\n'
+    template += 'void matrix_scan_kb(void) {\n'
+    template += '  	matrix_scan_user();\n'
+    template += '}\n'
+
+    template += 'bool process_record_kb(uint16_t keycode, keyrecord_t *record) {\n'
+    template += '	return process_record_user(keycode, record);\n'
+    template += '}\n'
+
+    template += 'void led_set_kb(uint8_t usb_led) {\n'
+    template += '	led_set_user(usb_led);\n'
+    template += '}'
+
+    return template
+
+
+def buildConfig(config):
+    template =  '#ifndef CONFIG_H\n'
+    template += '#define CONFIG_H\n'
+    template += '#include "config_common.h"\n'
+
+    template += '#define VENDOR_ID       {}\n'.format(config.get('vendorId'))
+    template += '#define PRODUCT_ID      {}\n'.format(config.get('productId'))
+    template += '#define DEVICE_VER      {}\n'.format(config.get('deviceVersion'))
+    template += '#define MANUFACTURER    {}\n'.format(config.get('manufacturer'))
+    template += '#define PRODUCT         {}\n'.format(config.get('product'))
+    template += '#define DESCRIPTION     {}\n'.format(config.get('description'))
+
+    template += '#define MATRIX_ROWS {}\n'.format(len(config.get('matrixRowPins')))
+    template += '#define MATRIX_COLS {}\n'.format(len(config.get('matrixColumnPins')))
+
+    template += '#define MATRIX_ROW_PINS {{ {} }}\n'.format(', '.join(config.get('matrixRowPins')))
+    template += '#define MATRIX_COL_PINS {{ {} }}\n'.format(', '.join(config.get('matrixColumnPins')))
+    template += '#define UNUSED_PINS\n'
+
+    template += '#define DIODE_DIRECTION {}\n'.format(config.get('diodeDirection'))
+
+    if config.get('matrixHasGhost'):
+        template += '#define MATRIX_HAS_GHOST\n'
+
+    template += '#define BACKLIGHT_LEVELS  {}\n'.format(config.get('backlightLevels'))
+    template += '#define BACKLIGHT_PIN {}\n'.format(config.get('backlightPin'))
+
+    template += '#define DEBOUNCING_DELAY  {}\n'.format(config.get('debouncingDelay'))
+    template += '#define TAPPING_TERM      {}\n'.format(config.get('tappingTerm'))
+
+    if config.get('lockingSupportEnabled'):
+        template += '#define LOCKING_SUPPORT_ENABLE\n'
+    if config.get('lockingResyncEnabled'):
+        template += '#define LOCKING_RESYNC_ENABLE\n'
+
+    template += '#define IS_COMMAND() ( \\\n'
+    template += '    {} \\\n'.format(config.get('commandKeyCombination'))
+    template += ')\n'
+
+    if not config.get('debugEnabled'):
+        template += '#define NO_DEBUG\n'
+
+    if not config.get('printEnabled'):
+        template += '#define NO_PRINT\n'
+
+    if not config.get('actionLayerEnabled'):
+        template += '#define NO_ACTION_LAYER\n'
+
+    if not config.get('actionTappingEnabled'):
+        template += '#define NO_ACTION_TAPPING\n'
+
+    if not config.get('actionOneShotEnabled'):
+        template += '#define NO_ACTION_ONESHOT'
+
+    if not config.get('actionMacroEnabled'):
+        template += '#define NO_ACTION_MACRO\n'
+
+    if not config.get('actionFunctionEnabled'):
+        template += '#define NO_ACTION_FUNCTION\n'
+
+    template += '#endif'
+
+    return template;
+
+def buildRules(rules):
+    template =  'MCU = {}\n'.format(rules.get('mcu'))
+    template += 'F_CPU = {}\n'.format(rules.get('processorFrequency'))
+    template += 'ARCH = {}\n'.format(rules.get('architecture'))
+    template += 'F_USB = {}\n'.format(rules.get('inputClockFrequency'))
+
+    template += 'OPT_DEFS += -DINTERRUPT_CONTROL_ENDPOINT\n'
+    template += 'OPT_DEFS += -DBOOTLOADER_SIZE={}\n'.format(rules.get('bootloaderSize'))
+
+    if rules.get('bootmagicEnabled'):
+        template += 'BOOTMAGIC_ENABLE = yes\n'
+
+    if rules.get('mousekeyEnabled'):
+        template += 'MOUSEKEY_ENABLE = yes\n'
+
+    if rules.get('extrakeyEnabled'):
+        template += 'EXTRAKEY_ENABLE = yes\n'
+
+    if rules.get('consoleEnabled'):
+        template += 'CONSOLE_ENABLE = yes\n'
+
+    if rules.get('commandEnabled'):
+        template += 'COMMAND_ENABLE = yes\n'
+
+    if rules.get('sleepLedEnabled'):
+        template += 'SLEEP_LED_ENABLE = yes\n'
+
+    if rules.get('nkroEnabled'):
+        template += 'NKRO_ENABLE = yes\n'
+
+    if rules.get('backlightEnabled'):
+        template += 'BACKLIGHT_ENABLE = yes'
+
+    return template
+
+
+def buildKeyboardHeader(configKeymap, firmware_directory):
+    keys = ', '.join(configKeymap.get('keys'))
+
+    template =  '#ifndef {}_H\n'.format(firmware_directory.upper())
+    template += '#define {}_H\n'.format(firmware_directory.upper())
+    template += '#include "quantum.h"\n'
+
+    template += '#define KEYMAP({}) {{ \\\n'.format(keys)
+
+    for row in configKeymap.get('positions'):
+        template += '{{ {} }}, \\\n'.format(', '.join(row))
+
+    template += '}\n#endif'
+
+    return template
+
+def prepKeyForTemplate(key):
+
+    key_type = key.get('type')
+    key_value = key.get('value')
+    key_secondary = key.get('secondary')
+
+    LAYER_TYPE_MAP = {
+        'momentary': 'MO',
+        'toggle': 'TG',
+        'direct': 'TO',
+        'taptoggle': 'TT',
+        'setdefaultlayer': 'DF'
+    }
+
+    EXEMPT_CODES = {
+        'RESET': True,
+        'BL_TOGG': True
+    }
+
+    if key_type == 'normal':
+        if key_value in EXEMPT_CODES:
+            return key_value
+
+        return 'KC_{}'.format(key_value)
+
+    elif key_type == 'modkey' or key_type == 'combokey':
+        return '{}(KC_{})'.format(key_secondary, key_value)
+
+    elif key_type == 'tapkey':
+        if key_secondary[1:].isdigit():
+            return 'LT({}, KC_{})'.format(key_secondary[1:], key_value)
+        return '{}_T(KC_{})'.format(key_secondary, key_value)
+
+    elif key_type in LAYER_TYPE_MAP:
+        return '{}({})'.format(LAYER_TYPE_MAP[key_type], key_value[1:])
+
+    elif key_type == 'oneshotmod' or key_type == 'oneshotlayer':
+        if key_value[1:].isdigit():
+            return 'OSL({})'.format(key_value[1:])
+        return 'OSM({})'.format(key_value)
+
+    elif key_type == 'unicode':
+        return 'UC({})'.format(key_value)
+
+    else:
+        return 'KC_NO'
+
+
+def buildKeymap(keyData, firmware_directory):
+    layers = []
+
+    for layer in keyData:
+        layer_keys = []
+        for row in layer:
+            for key in row:
+                layer_keys.append(prepKeyForTemplate(key))
+
+        layers.append(layer_keys)
+
+    template =  '#include "{}.h"\n'.format(firmware_directory)
+    template += 'const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {\n'
+    for index, layer in enumerate(layers):
+        template += '[{}] = KEYMAP({}),\n'.format(index, ', '.join(layer))
+
+    template += '};\n'
+
+    template += 'const uint16_t PROGMEM fn_actions[] = {\n'
+    template += '\n'
+    template += '};'
+
+    return template
