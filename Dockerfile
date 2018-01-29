@@ -7,7 +7,5 @@ RUN apt-get install -y \
   dfu-programmer
 RUN chown -R www-data /app/tmk_keyboard
 RUN chmod -R 774 /app/tmk_keyboard
-RUN chown -R www-data /app/qmk_firmware
-RUN chmod -R 774 /app/qmk_firmware
 USER $MOD_WSGI_USER:$MOD_WSGI_GROUP
 CMD [ "tmkconfig.wsgi" ]
